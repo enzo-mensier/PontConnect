@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pontconnect/pages/home_page.dart';
+import 'package:pontconnect/pages/add_reservation_page.dart';
 import 'package:pontconnect/pages/login_screen.dart';
 import 'package:pontconnect/pages/registe.dart';
+import 'package:pontconnect/pages/reservation_view.dart';
 import 'package:pontconnect/pages/user_page.dart';
 
 void main() {
@@ -22,13 +23,15 @@ class MyApp extends StatelessWidget {
       ),
 
       // DEFINITIONS DES ROUTES
-      initialRoute: '/',
+      initialRoute: '/login_screen',
       routes: {
-        '/': (context) => HomePage(), // PAGE D'ACCUEIL
         '/login_screen': (context) => LoginPage(), // PAGE DE CONNEXION
-        '/registe' : (context) => RegisterPage(), // PAGE D'INSCRIPTION
+        '/register' : (context) => RegisterPage(), // PAGE D'INSCRIPTION
         '/user': (context) => UserPage(), // PAGE USER
+        '/Reservation_view': (context) => ReservationsSchedulePage(), // PAGE DE VIEW RESERVATION
+        '/AddReservation': (context) => AddReservationPage(), // PAGE DE RESERVATION
       },
+
     );
   }
 }
