@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:pontconnect/pages/user_session.dart';
 import 'dart:convert';
 
+// COULEURS
+import 'package:pontconnect/colors.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
 
-
-  Future<void> _login() async {
+  Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.145.118:8888/api/login.php'),
+        Uri.parse('http://192.168.145.118:8888/api/register.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
+          'name': _nameController.text.trim(),
           'email': _emailController.text.trim(),
           'password': _passwordController.text.trim(),
         }),
@@ -37,20 +39,16 @@ class _LoginPageState extends State<LoginPage> {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 && data['success'] == true) {
-        // Stocker l'utilisateur connecté dans le singleton UserSession
-        UserSession.setUser(
-          id: data['user']['id'],
-          name: data['user']['name'],
-          email: data['user']['email'],
-        );
-
+      if (response.statusCode == 201 && data['success'] == true) {
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/user');
+          Navigator.pushReplacementNamed(context, '/login_screen');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Inscription réussie ! Connectez-vous')),
+          );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'] ?? 'Erreur de connexion')),
+          SnackBar(content: Text(data['message'] ?? 'Erreur d\'inscription')),
         );
       }
     } catch (e) {
@@ -65,11 +63,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Nouveau fond en gradient violet/rose
+      // Fond en gradient violet/rose pour le style moderne
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF8E2DE2), Color(0xFFDA22FF)],
+            colors: [primaryColor, tertiaryColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -77,14 +75,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-            // Conteneur épuré pour le formulaire
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
+                    color: textPrimary,
                     blurRadius: 10,
                     offset: Offset(0, 4),
                   ),
@@ -95,23 +92,47 @@ class _LoginPageState extends State<LoginPage> {
                 key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                  children: [
                     SvgPicture.asset(
                       "assets/images/logo.svg",
                       height: 90,
-                      color: const Color(0xFF8E2DE2),
+                      color: primaryColor,
                     ),
                     const SizedBox(height: 30),
                     TextFormField(
-                      controller: _emailController,
+                      controller: _nameController,
                       decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: const Icon(Icons.email, color: Color(0xFF8E2DE2)),
+                        labelText: 'Nom complet',
+                        prefixIcon: const Icon(Icons.person, color: primaryColor),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF8E2DE2)),
+                          borderSide: const BorderSide(color: primaryColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer votre nom';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: const Icon(Icons.email, color: primaryColor),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: primaryColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -135,12 +156,12 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Mot de passe',
-                        prefixIcon: const Icon(Icons.lock, color: Color(0xFF8E2DE2)),
+                        prefixIcon: const Icon(Icons.lock, color: primaryColor),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF8E2DE2)),
+                          borderSide: const BorderSide(color: primaryColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -149,17 +170,17 @@ class _LoginPageState extends State<LoginPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                            color: const Color(0xFF8E2DE2),
+                            color: primaryColor,
                           ),
                           onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer votre mot de passe';
+                          return 'Veuillez entrer un mot de passe';
                         }
-                        if (value.length < 6) {
-                          return 'Minimum 6 caractères';
+                        if (value.length < 12) {
+                          return 'Minimum 12 caractères';
                         }
                         return null;
                       },
@@ -168,9 +189,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _login,
+                        onPressed: _isLoading ? null : _register,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8E2DE2),
+                          backgroundColor: primaryColor,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -179,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: _isLoading
                             ? const CircularProgressIndicator(color: Colors.white)
                             : const Text(
-                          "Connexion",
+                          "S'inscrire",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -190,13 +211,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/register');
+                        Navigator.pushReplacementNamed(context, '/login_screen');
                       },
                       child: const Text(
-                        "Pas de compte ? S'inscrire",
+                        "Déjà un compte ? Se connecter",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF8E2DE2),
+                          color: primaryColor,
                         ),
                       ),
                     ),
@@ -212,6 +233,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();

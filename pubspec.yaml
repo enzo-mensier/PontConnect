@@ -44,6 +44,8 @@ flutter:
      - assets/images/
 
   fonts:
-     - family: SmoochSans
+     #- family: SmoochSans
+     - family: DarumadropOne
        fonts:
-         - asset: assets/fonts/SmoochSans-VariableFont_wght.ttf
+        # - asset: assets/fonts/SmoochSans-VariableFont_wght.ttf
+         - asset: assets/fonts/DarumadropOne-Regular.ttf

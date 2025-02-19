@@ -1,34 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:pontconnect/user/user_session_storage.dart';
 import 'dart:convert';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+// COULEURS
+import 'package:pontconnect/colors.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
 
-  Future<void> _register() async {
+
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.145.118:8888/api/register.php'),
+        Uri.parse('http://192.168.145.118:8888/api/login.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'name': _nameController.text.trim(),
           'email': _emailController.text.trim(),
           'password': _passwordController.text.trim(),
         }),
@@ -36,16 +39,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 201 && data['success'] == true) {
+      if (response.statusCode == 200 && data['success'] == true) {
+        // Stocker l'utilisateur connecté dans le singleton UserSession
+        UserSession.setUser(
+          id: data['user']['id'],
+          name: data['user']['name'],
+          email: data['user']['email'],
+        );
+
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/login_screen');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Inscription réussie ! Connectez-vous')),
-          );
+          Navigator.pushReplacementNamed(context, '/user');
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'] ?? 'Erreur d\'inscription')),
+          SnackBar(content: Text(data['message'] ?? 'Erreur de connexion')),
         );
       }
     } catch (e) {
@@ -60,11 +67,11 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Fond en gradient violet/rose pour le style moderne
+      // Nouveau fond en gradient violet/rose
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF8E2DE2), Color(0xFFDA22FF)],
+            colors: [primaryColor, tertiaryColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -72,6 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+            // Conteneur épuré pour le formulaire
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
@@ -89,47 +97,23 @@ class _RegisterPageState extends State<RegisterPage> {
                 key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: <Widget>[
                     SvgPicture.asset(
                       "assets/images/logo.svg",
                       height: 90,
-                      color: const Color(0xFF8E2DE2),
+                      color: primaryColor,
                     ),
                     const SizedBox(height: 30),
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Nom complet',
-                        prefixIcon: const Icon(Icons.person, color: Color(0xFF8E2DE2)),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF8E2DE2)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer votre nom';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: const Icon(Icons.email, color: Color(0xFF8E2DE2)),
+                        prefixIcon: const Icon(Icons.email, color: primaryColor),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF8E2DE2)),
+                          borderSide: const BorderSide(color: primaryColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -153,12 +137,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Mot de passe',
-                        prefixIcon: const Icon(Icons.lock, color: Color(0xFF8E2DE2)),
+                        prefixIcon: const Icon(Icons.lock, color: primaryColor),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF8E2DE2)),
+                          borderSide: const BorderSide(color: primaryColor),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -167,17 +151,17 @@ class _RegisterPageState extends State<RegisterPage> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                            color: const Color(0xFF8E2DE2),
+                            color: primaryColor,
                           ),
                           onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer un mot de passe';
+                          return 'Veuillez entrer votre mot de passe';
                         }
-                        if (value.length < 12) {
-                          return 'Minimum 12 caractères';
+                        if (value.length < 6) {
+                          return 'Minimum 6 caractères';
                         }
                         return null;
                       },
@@ -186,35 +170,35 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _register,
+                        onPressed: _isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8E2DE2),
+                          backgroundColor: primaryColor,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(color: backgroundLight)
                             : const Text(
-                          "S'inscrire",
+                          "Connexion",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: backgroundLight,
                           ),
                         ),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login_screen');
+                        Navigator.pushReplacementNamed(context, '/register');
                       },
                       child: const Text(
-                        "Déjà un compte ? Se connecter",
+                        "Pas de compte ? S'inscrire",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF8E2DE2),
+                          color: primaryColor,
                         ),
                       ),
                     ),
@@ -230,7 +214,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
