@@ -106,7 +106,10 @@ class _UserPageState extends State<UserPage> {
           ),
         ],
       );
-    } else {
+    } else if (_currentIndex == 2) {
+      return const CapteursCarouselPage();
+    }
+    else {
       return Center(
         child: Text(
           'FONCTIONNALITÉ À VENIR',
