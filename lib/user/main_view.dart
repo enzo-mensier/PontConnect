@@ -106,8 +106,6 @@ class _UserPageState extends State<UserPage> {
           ),
         ],
       );
-    } else if (_currentIndex == 2) {
-      return const CapteursCarouselPage();
     }
     else {
       return Center(

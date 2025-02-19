@@ -1,17 +1,19 @@
+// FILE: /Users/wicramachine/AndroidStudioProjects/PontConnect/lib/user/get_values_capteurs.dart
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-// COULEURS
 import 'package:pontconnect/colors.dart';
 
+//////////////////////
+// CAPTEURS CAROUSEL
+//////////////////////
 class CapteursCarouselPage extends StatefulWidget {
   const CapteursCarouselPage({Key? key}) : super(key: key);
 
-  // CREER ETAT
   @override
   _CapteursCarouselPageState createState() => _CapteursCarouselPageState();
 }
@@ -21,7 +23,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
   Timer? _refreshTimer;
   final Duration _refreshInterval = const Duration(seconds: 10);
 
-  // INITIALISATION
+  // INIT
   @override
   void initState() {
     super.initState();
@@ -31,10 +33,9 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     });
   }
 
-  // RECUPERATION DES CAPTEURS
+  // FETCH
   Future<void> _fetchCapteurs() async {
     try {
-      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}getValuesCapteurs.php');
       final response = await http.get(url);
       final data = json.decode(response.body);
@@ -54,14 +55,14 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     }
   }
 
-  // LIBERER RESSOURCES
+  // DISPOSE
   @override
   void dispose() {
     _refreshTimer?.cancel();
     super.dispose();
   }
 
-  // CARTE DU CAPTEUR
+  // SENSOR CARD
   Widget buildSensorCard({
     required String value,
     required IconData icon,
@@ -98,11 +99,9 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     );
   }
 
-  // CONSTRUCTION DE LA SLIDE POUR UN CAPTEUR
+  // BUILD SLIDE
   Widget _buildSlide(Map<String, dynamic> item) {
-    // Si niveau_eau > 7, on considère que le pont est ouvert (bateau)
     bool showBoat = (item['niveau_eau'] is num && item['niveau_eau'] > 7);
-
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -110,7 +109,6 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-
           // HEADER
           Container(
             padding: const EdgeInsets.all(12),
@@ -123,7 +121,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                   blurRadius: 4,
                 )
               ],
@@ -140,8 +138,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
             ),
           ),
           const SizedBox(height: 16),
-
-          // TEMPERATURE ET NIVEAU D'EAU
+          // TEMP & WATER
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
@@ -160,8 +157,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
             ),
           ),
           const SizedBox(height: 16),
-
-          // HUMIDITE ET ANIMATION SVG
+          // HUMIDITY & SVG ANIMATION
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
@@ -206,7 +202,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     );
   }
 
-  // CONSTRUCTION DU WIDGET PRINCIPAL
+  // MAIN BUILD
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,7 +219,9 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
   }
 }
 
-// ANIMATION SVG (BATEAU / VOITURE)
+////////////////////
+// ANIMATED SVG
+////////////////////
 class AnimatedBridgeSVG extends StatefulWidget {
   final bool isBoat;
   const AnimatedBridgeSVG({Key? key, required this.isBoat}) : super(key: key);
@@ -239,20 +237,17 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
   late Animation<double> _boatTiltAnimation;
   late Animation<double> _carFlipAnimation;
 
-  // INITIALISATION DE L'ANIMATION
+  // INIT ANIM
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
-
     _translationAnimation = Tween<double>(begin: -10, end: 10).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-
     if (widget.isBoat) {
       _boatTiltAnimation = Tween<double>(begin: -0.05, end: 0.05).animate(
         CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
@@ -269,14 +264,14 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
     }
   }
 
-  // LIBERATION DE L'ANIMATION
+  // DISPOSE ANIM
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
-  // CONSTRUCTION DU WIDGET ANIMÉ
+  // BUILD ANIMATED SVG
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
