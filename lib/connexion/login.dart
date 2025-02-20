@@ -196,18 +196,37 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/register');
-                      },
-                      child: const Text(
-                        "Pas de compte ? S'inscrire",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: primaryColor,
+                    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/register');
+                          },
+                          child: const Text(
+                            "Pas de compte ? S'inscrire",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: primaryColor,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                        const SizedBox(width: 20), // espace entre les deux boutons
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/Visitor');
+                          },
+                          child: const Text(
+                            "Visiteur",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

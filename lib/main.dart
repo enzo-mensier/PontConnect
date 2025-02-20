@@ -5,6 +5,7 @@ import 'package:pontconnect/connexion/register.dart';
 import 'package:pontconnect/user/view_reservation.dart';
 import 'package:pontconnect/user/main_view.dart';
 import 'package:pontconnect/animation_ouverture.dart';
+import 'package:pontconnect/visitor/visitor_main_view.dart';
 
 import 'admin/admin_main_view.dart';
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/AddReservation': (context) => AddReservationPage(),
         '/SplashScreen': (context) => SplashScreen(),
         '/admin': (context) => AdminMainView(),
+        '/Visitor': (context) => VisitorMainView(),
       },
     );
   }

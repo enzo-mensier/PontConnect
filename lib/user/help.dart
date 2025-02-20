@@ -5,7 +5,7 @@ import 'package:pontconnect/colors.dart';
 class HelpPage extends StatelessWidget {
   const HelpPage({Key? key}) : super(key: key);
 
-  // Widget pour les icônes SVG (boat et car)
+  // Widget pour les icônes SVG (ex : bateau et voiture)
   Widget _buildSvgIconInfo({
     required String svgAsset,
     required Color iconColor,
@@ -20,12 +20,16 @@ class HelpPage extends StatelessWidget {
           width: 28,
           height: 28,
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 16, color: textSecondary),
-            textAlign: TextAlign.justify,
+            style: const TextStyle(
+              fontSize: 16,
+              color: textSecondary,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.left,
           ),
         ),
       ],
@@ -42,38 +46,43 @@ class HelpPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: iconColor, size: 28),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 16, color: textSecondary),
-            textAlign: TextAlign.justify,
+            style: const TextStyle(
+              fontSize: 16,
+              color: textSecondary,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.left,
           ),
         ),
       ],
     );
   }
 
-  // Widget pour construire une carte d'information
+  // Widget pour construire une carte d'information moderne
   Widget _buildCard({
     required String title,
     required Widget content,
   }) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.only(bottom: 20),
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(vertical: 12),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
               style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: textPrimary),
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: primaryColor,
+              ),
             ),
             const SizedBox(height: 16),
             content,
@@ -83,16 +92,16 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  // Header de section pour une meilleure lisibilité
+  // Header de section
   Widget _buildSectionHeader(String text) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      padding: const EdgeInsets.only(top: 20, bottom: 12),
       child: Text(
         text,
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 26,
           fontWeight: FontWeight.bold,
-          color: textPrimary,
+          color: secondaryColor,
         ),
       ),
     );
@@ -103,65 +112,64 @@ class HelpPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundLight,
       appBar: AppBar(
-        title: const Text(
-            'AIDE & INFORMATIONS',
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: backgroundLight),
-
-        ),
-        backgroundColor: primaryColor,
+        elevation: 0,
         centerTitle: true,
+        backgroundColor: primaryColor,
+        title: const Text(
+          'AIDE & INFORMATIONS',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 22,
+            color: backgroundLight,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionHeader('Présentation'),
             const Text(
-              'Cette application offre une vue d’ensemble moderne et épurée des ponts disponibles et de leurs réservations. '
-                  'Chaque page est conçue pour rendre la navigation intuitive et agréable.',
-              style: TextStyle(fontSize: 16, color: textSecondary),
-              textAlign: TextAlign.justify,
+              'Découvrez une application moderne et épurée pour consulter les ponts et gérer vos réservations. '
+                  'Une interface intuitive et agréable pour faciliter votre navigation.',
+              style: TextStyle(fontSize: 16, color: textSecondary, height: 1.5),
+              textAlign: TextAlign.left,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             _buildCard(
               title: 'Page d\'Accueil - Informations sur les Ponts',
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'La première partie de la page d’accueil présente un carrousel de différents ponts. '
-                        'Chaque slide affiche plusieurs informations clés :',
-                    style: TextStyle(fontSize: 16, color: textSecondary),
-                    textAlign: TextAlign.justify,
+                    'Un carrousel interactif présente divers ponts avec des informations essentielles :',
+                    style: TextStyle(fontSize: 16, color: textSecondary, height: 1.5),
+                    textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 16),
                   _buildSvgIconInfo(
                     svgAsset: 'assets/images/boat.svg',
                     iconColor: primaryColor,
-                    text:
-                    'Le pont est ouvert pour le passage des bateaux et engins navigables.',
+                    text: 'Pont ouvert pour le passage des bateaux et engins navigables.',
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   _buildSvgIconInfo(
                     svgAsset: 'assets/images/car.svg',
                     iconColor: secondaryColor,
-                    text:
-                    'Le pont est fermé pour le passage des bateaux, traversable par voie routière.',
+                    text: 'Pont fermé pour la navigation, accessible via voie routière.',
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   _buildIconInfo(
                     icon: Icons.thermostat,
                     iconColor: accentColor,
-                    text:
-                    'La température est affichée pour informer sur l’environnement du pont.',
+                    text: 'Affichage de la température ambiante.',
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   _buildIconInfo(
                     icon: Icons.water_damage,
                     iconColor: tertiaryColor,
-                    text:
-                    'Le taux d\'humidité est également indiqué.',
+                    text: 'Indication du taux d\'humidité pour une vue complète.',
                   ),
                 ],
               ),
@@ -169,22 +177,20 @@ class HelpPage extends StatelessWidget {
             _buildCard(
               title: 'Page d\'Accueil - Disponibilités',
               content: const Text(
-                'La seconde partie comporte une barre de recherche permettant de consulter '
-                    'les disponibilités d\'un pont pour une date donnée. Sélectionnez le pont, choisissez la date, '
-                    'puis lancez la recherche pour visualiser les créneaux disponibles durant la journée.',
-                style: TextStyle(fontSize: 16, color: textSecondary),
-                textAlign: TextAlign.justify,
+                'Consultez les disponibilités en sélectionnant le pont et en choisissant une date. '
+                    'La barre de recherche vous guide pour trouver le créneau idéal.',
+                style: TextStyle(fontSize: 16, color: textSecondary, height: 1.5),
+                textAlign: TextAlign.left,
               ),
             ),
             _buildCard(
               title: 'Réservation',
               content: const Text(
-                'La section Réservation se divise en deux parties :\n\n'
-                    '• Le widget d’ajout de réservation permet de planifier une réservation pour un jour à venir. '
-                    'Choisissez la date, l’heure et le pont souhaité.\n\n'
-                    '• Le widget de suivi vous permet de consulter vos réservations récentes et de les annuler si nécessaire.',
-                style: TextStyle(fontSize: 16, color: textSecondary),
-                textAlign: TextAlign.justify,
+                'Planifiez vos réservations en deux étapes :\n\n'
+                    '• Ajoutez une réservation en sélectionnant la date, l’heure et le pont souhaité.\n\n'
+                    '• Suivez vos réservations récentes et annulez-les si nécessaire.',
+                style: TextStyle(fontSize: 16, color: textSecondary, height: 1.5),
+                textAlign: TextAlign.left,
               ),
             ),
             const SizedBox(height: 40),
@@ -192,7 +198,7 @@ class HelpPage extends StatelessWidget {
               child: Text(
                 'Merci d\'utiliser notre application !',
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: textPrimary,
                 ),
