@@ -8,6 +8,7 @@ const Color accentColor = Color(0xFFe9b200);
 const Color backgroundLight = Color(0xFFFFFFFF);
 const Color textPrimary = Color(0xFF212121);
 const Color textSecondary = Color(0xFF757575);
+const Color accentColor2 = Color(0xFF72efdd);
 
 
 // API REST URL CENTRALISATION

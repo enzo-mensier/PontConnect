@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pontconnect/user/user_reservation.dart';
 import '../user/get_values_capteurs.dart';
-import '../user/add_reservation.dart';
 import '../user/view_reservation.dart';
+import 'admin_pending_reservations.dart';
+import 'admin_add_reservation.dart';
+import 'admin_reservation.dart';
+
 
 // COULEURS
 import 'package:pontconnect/colors.dart';
+
 
 class AdminMainView extends StatefulWidget {
   const AdminMainView({super.key});
@@ -51,9 +54,9 @@ class _UserPageState extends State<AdminMainView> {
           const Text(
             "| ADMIN",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 25,
               fontWeight: FontWeight.bold,
-              color: accentColor,
+              color: primaryColor,
             ),
           ),
         ],
@@ -97,8 +100,8 @@ class _UserPageState extends State<AdminMainView> {
             borderRadius: BorderRadius.circular(16),
             child: Container(
               color: backgroundLight,
-              height: 280,
-              child: const AddReservationPage(),
+              height: 340,
+              child: const AdminAddReservation(),
             ),
           ),
           const SizedBox(height: 16),
@@ -108,12 +111,15 @@ class _UserPageState extends State<AdminMainView> {
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 color: backgroundLight,
-                child: const UserReservationsPage(),
+                child: const AdminReservations(),
               ),
             ),
           ),
         ],
       );
+    }
+    else if (_currentIndex == 2){
+      return const AdminPendingReservations();
     }
     else {
       return Center(

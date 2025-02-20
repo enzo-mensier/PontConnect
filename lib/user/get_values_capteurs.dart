@@ -114,10 +114,6 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
