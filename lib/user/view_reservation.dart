@@ -41,6 +41,11 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
             _selectedPontId = _ponts[0]['pont_id'];
           }
         });
+        
+        // RECHERCHER LES RESERVATIONS AUTO
+        if (_ponts.isNotEmpty) {
+          _searchSchedule();
+        }
       } else {
         _showMessage('ERREUR LORS DU CHARGEMENT DES PONTS.');
       }

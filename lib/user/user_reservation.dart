@@ -266,10 +266,27 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
         backgroundColor: primaryColor,
         centerTitle: true,
       ),
+
       body: Container(
-        color: backgroundLight, // Changer la couleur de fond en noir
+        color: backgroundLight,
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
+            : _reservations.isEmpty
+            ? RefreshIndicator(
+          onRefresh: _fetchReservations,
+          child: ListView(
+            padding: const EdgeInsets.only(top: 25),
+            children: [
+              const SizedBox(height: 50),
+              Center(
+                child: Text(
+                  "VOUS N'AVEZ PAS DE RÉSERVATION",
+                  style: TextStyle(fontSize: 16, color: textPrimary),
+                ),
+              ),
+            ],
+          ),
+        )
             : RefreshIndicator(
           onRefresh: _fetchReservations,
           child: ListView.builder(

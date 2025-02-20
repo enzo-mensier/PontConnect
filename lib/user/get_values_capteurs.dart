@@ -82,13 +82,13 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
                   style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: accentColor,
+                    color: secondaryColor,
                   ),
                   textAlign: TextAlign.end,
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(icon, color: secondaryColor, size: 32),
+              Icon(icon, color: accentColor, size: 32),
             ],
           ),
         ),
@@ -171,13 +171,13 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
                               style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
-                                color: accentColor,
+                                color: secondaryColor,
                               ),
                               textAlign: TextAlign.end,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Icon(Icons.grain, color: secondaryColor, size: 32),
+                          Icon(Icons.grain, color: accentColor, size: 32),
                         ],
                       ),
                     ),
@@ -292,13 +292,13 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
         'assets/images/boat.svg',
         width: 54,
         height: 54,
-        color: secondaryColor,
+        color: accentColor,
       )
           : SvgPicture.asset(
         'assets/images/car.svg',
         width: 54,
         height: 54,
-        color: secondaryColor,
+        color: accentColor,
       ),
     );
   }

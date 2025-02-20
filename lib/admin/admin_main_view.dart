@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../user/get_values_capteurs.dart';
+import '../user/user_session_storage.dart';
 import '../user/view_reservation.dart';
 import 'admin_pending_reservations.dart';
 import 'admin_add_reservation.dart';
@@ -23,6 +24,9 @@ class AdminMainView extends StatefulWidget {
 
 class _UserPageState extends State<AdminMainView> {
 
+  final String userName = UserSession.userName ?? "ADMIN";
+  int _currentIndex = 0;
+
   // CONSTRUIRE L'INTERFACE PRINCIPALE
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,6 @@ class _UserPageState extends State<AdminMainView> {
     );
   }
 
-  int _currentIndex = 0;
 
   // METHODE DECONNEXION
   void _logout() {
@@ -80,8 +83,8 @@ class _UserPageState extends State<AdminMainView> {
             color: primaryColor,
           ),
           const SizedBox(width: 8),
-          const Text(
-            "| ADMIN",
+          Text(
+            ("| $userName").toUpperCase(),
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -148,13 +151,31 @@ class _UserPageState extends State<AdminMainView> {
       );
     }
     else if (_currentIndex == 2){
-      return const AdminPendingReservations();
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          color: backgroundLight,
+          child: const AdminPendingReservations(),
+        ),
+      );
     }
     else if (_currentIndex == 3){
-      return const AdminUserManagement();
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          color: backgroundLight,
+          child: const AdminUserManagement(),
+        ),
+      );
     }
     else if (_currentIndex == 4){
-      return const AdminPontManagement();
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          color: backgroundLight,
+          child: const AdminPontManagement(),
+        ),
+      );
     }
     else {
       return Center(

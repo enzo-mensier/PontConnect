@@ -159,7 +159,10 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Gestion des utilisateurs"),
+        title: const Text(
+            "GESTION DES UTILISATEURS",
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: backgroundLight),
+        ),
         centerTitle: true,
         backgroundColor: primaryColor,
       ),

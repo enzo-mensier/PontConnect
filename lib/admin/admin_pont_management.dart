@@ -143,17 +143,21 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
         children: [
           TextField(
             controller: _nomController,
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               labelText: "Nom du pont",
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _adresseController,
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               labelText: "Adresse du pont",
-              border: OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -162,10 +166,16 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
             child: ElevatedButton(
               onPressed: _addPont,
               style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: secondaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),              ),
+              child: const Text(
+                  "Ajouter",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: backgroundLight),
+
               ),
-              child: const Text("Ajouter"),
             ),
           ),
         ],
@@ -184,7 +194,10 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Gestion des ponts"),
+        title: const Text(
+            "GESTION DES PONTS",
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: backgroundLight),
+        ),
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
