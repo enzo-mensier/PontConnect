@@ -42,7 +42,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
 
   Future<void> _fetchPonts() async {
     try {
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}getPonts.php'));
+      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
       if (data['success']) {
         setState(() {
@@ -119,7 +119,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     String startTimeStr = DateFormat('HH:mm').format(startDateTime);
 
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminAddReservation.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminAddReservation.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

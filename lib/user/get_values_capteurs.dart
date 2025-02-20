@@ -33,7 +33,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
   // FETCH
   Future<void> _fetchCapteurs() async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}getValuesCapteurs.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}user/getValuesCapteurs.php');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {

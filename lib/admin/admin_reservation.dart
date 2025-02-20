@@ -31,7 +31,7 @@ class _AdminReservationsState extends State<AdminReservations> {
     });
     try {
       final url =
-      Uri.parse('${ApiConstants.baseUrl}getUserReservations.php?user_id=${UserSession.userId}');
+      Uri.parse('${ApiConstants.baseUrl}user/getUserReservations.php?user_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {
@@ -55,7 +55,7 @@ class _AdminReservationsState extends State<AdminReservations> {
   Future<void> _updateStatus(int reservationId, String newStatut) async {
     if (UserSession.userId == null) return;
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminUpdateReservationStatus.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminUpdateReservationStatus.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

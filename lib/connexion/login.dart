@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.145.118:8888/api/login.php'),
+        Uri.parse('${ApiConstants.baseUrl}auth/login.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': _emailController.text.trim(),

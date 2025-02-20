@@ -32,7 +32,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
   Future<void> _fetchPonts() async {
     try {
       // API REST URL
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}getPonts.php'));
+      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
       if (data['success']) {
         setState(() {
@@ -59,7 +59,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
     final formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
     try {
       // API REST URL
-      final url = Uri.parse('${ApiConstants.baseUrl}schedule.php?pont_id=$_selectedPontId&date=$formattedDate');
+      final url = Uri.parse('${ApiConstants.baseUrl}user/schedule.php?pont_id=$_selectedPontId&date=$formattedDate');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success']) {

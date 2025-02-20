@@ -34,7 +34,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
     });
     try {
       // API REST URL
-      final url = Uri.parse('${ApiConstants.baseUrl}getUserReservations.php?user_id=${UserSession.userId}');
+      final url = Uri.parse('${ApiConstants.baseUrl}user/getUserReservations.php?user_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {
@@ -60,7 +60,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
     if (UserSession.userId == null) return;
     try {
       // API REST URL
-      final url = Uri.parse('${ApiConstants.baseUrl}userUpdateReservationStatus.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}user/userUpdateReservationStatus.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

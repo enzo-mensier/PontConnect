@@ -43,7 +43,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
   Future<void> _fetchPonts() async {
     try {
       // API REST URL
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}getPonts.php'));
+      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
       if (data['success']) {
         setState(() {
@@ -126,7 +126,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
 
     try {
       // API REST URL
-      final url = Uri.parse('${ApiConstants.baseUrl}addReservation.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}user/addReservation.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

@@ -28,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.145.118:8888/api/register.php'),
+        Uri.parse('${ApiConstants.baseUrl}auth/register.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': _nameController.text.trim(),
@@ -63,7 +63,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Fond en gradient violet/rose pour le style moderne
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

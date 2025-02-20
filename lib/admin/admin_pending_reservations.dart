@@ -27,7 +27,7 @@ class _AdminReservationsState extends State<AdminPendingReservations> {
   Future<void> _fetchReservations() async {
     setState(() => _isLoading = true);
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminGetPendingReservations.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminGetPendingReservations.php');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {
@@ -48,7 +48,7 @@ class _AdminReservationsState extends State<AdminPendingReservations> {
   Future<void> _updateStatus(int reservationId, String newStatut) async {
     if (UserSession.userId == null) return;
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminUpdatePendingReservationStatus.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminUpdatePendingReservationStatus.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

@@ -28,7 +28,7 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
       _isLoading = true;
     });
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminGetPonts.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminGetPonts.php');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {
@@ -51,7 +51,7 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
   Future<void> _addPont() async {
     if (_nomController.text.trim().isEmpty || _adresseController.text.trim().isEmpty) return;
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminAddPont.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminAddPont.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -79,7 +79,7 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
 
   Future<void> _deletePont(int pontId) async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminDeletePont.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminDeletePont.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

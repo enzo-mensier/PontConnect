@@ -29,7 +29,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
       _isLoading = true;
     });
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminGetUsers.php?admin_id=${UserSession.userId}');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminGetUsers.php?admin_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
       if (data['success'] == true) {
@@ -94,7 +94,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
     if (!confirmed) return;
 
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}adminUpdateUserType.php');
+      final url = Uri.parse('${ApiConstants.baseUrl}admin/adminUpdateUserType.php');
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
