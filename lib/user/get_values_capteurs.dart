@@ -1,5 +1,3 @@
-// FILE: /Users/wicramachine/AndroidStudioProjects/PontConnect/lib/user/get_values_capteurs.dart
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,9 +6,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:pontconnect/colors.dart';
 
-//////////////////////
+
 // CAPTEURS CAROUSEL
-//////////////////////
 class CapteursCarouselPage extends StatefulWidget {
   const CapteursCarouselPage({Key? key}) : super(key: key);
 
@@ -215,9 +212,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
   }
 }
 
-////////////////////
-// ANIMATED SVG
-////////////////////
+// ANIMATION SVG
 class AnimatedBridgeSVG extends StatefulWidget {
   final bool isBoat;
   const AnimatedBridgeSVG({Key? key, required this.isBoat}) : super(key: key);
@@ -233,7 +228,7 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
   late Animation<double> _boatTiltAnimation;
   late Animation<double> _carFlipAnimation;
 
-  // INIT ANIM
+  // INITIALISATION ANIM
   @override
   void initState() {
     super.initState();
@@ -260,14 +255,14 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
     }
   }
 
-  // DISPOSE ANIM
+  // ANIM
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
-  // BUILD ANIMATED SVG
+  // BUILD ANIMATION SVG
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(

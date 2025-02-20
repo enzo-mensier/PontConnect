@@ -4,7 +4,9 @@ import '../user/get_values_capteurs.dart';
 import '../user/view_reservation.dart';
 import 'admin_pending_reservations.dart';
 import 'admin_add_reservation.dart';
+import 'admin_pont_management.dart';
 import 'admin_reservation.dart';
+import 'admin_user_management.dart';
 
 
 // COULEURS
@@ -20,7 +22,6 @@ class AdminMainView extends StatefulWidget {
 }
 
 class _UserPageState extends State<AdminMainView> {
-  int _currentIndex = 0;
 
   // CONSTRUIRE L'INTERFACE PRINCIPALE
   @override
@@ -33,6 +34,34 @@ class _UserPageState extends State<AdminMainView> {
         child: _getBodyContent(),
       ),
       bottomNavigationBar: _buildBottomNavBar(),
+    );
+  }
+
+  int _currentIndex = 0;
+
+  // METHODE DECONNEXION
+  void _logout() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Déconnexion'),
+          content: const Text('Voulez-vous vraiment vous déconnecter ?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamedAndRemoveUntil('/login_screen', (route) => false);
+              },
+              child: const Text('Déconnecter'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -121,6 +150,12 @@ class _UserPageState extends State<AdminMainView> {
     else if (_currentIndex == 2){
       return const AdminPendingReservations();
     }
+    else if (_currentIndex == 3){
+      return const AdminUserManagement();
+    }
+    else if (_currentIndex == 4){
+      return const AdminPontManagement();
+    }
     else {
       return Center(
         child: Text(
@@ -140,9 +175,14 @@ class _UserPageState extends State<AdminMainView> {
       unselectedItemColor: textSecondary,
       elevation: 8,
       onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
+        if (index == 5) {
+          // DECONNEXION
+          _logout();
+        } else {
+          setState(() {
+            _currentIndex = index;
+          });
+        }
       },
       items: const [
         BottomNavigationBarItem(
@@ -154,8 +194,20 @@ class _UserPageState extends State<AdminMainView> {
           label: 'Réservation',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profil',
+          icon: Icon(Icons.check_circle_outlined),
+          label: 'Confirm',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.add_moderator_outlined),
+          label: 'Admin',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.directions_boat_outlined),
+          label: 'Ponts',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.logout),
+          label: 'Déco',
         ),
       ],
     );
