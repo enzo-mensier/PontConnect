@@ -6,6 +6,8 @@ import 'package:pontconnect/user/view_reservation.dart';
 import 'package:pontconnect/user/main_view.dart';
 import 'package:pontconnect/animation_ouverture.dart';
 
+import 'admin/admin_main_view.dart';
+
 // POINT D'ENTREE
 void main() {
   // LANCEMENT DE L'APPLICATION
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/Reservation_view': (context) => ReservationsSchedulePage(),
         '/AddReservation': (context) => AddReservationPage(),
         '/SplashScreen': (context) => SplashScreen(),
+        '/admin': (context) => AdminMainView(),
       },
     );
   }

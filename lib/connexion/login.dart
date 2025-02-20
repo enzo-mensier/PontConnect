@@ -40,15 +40,21 @@ class _LoginPageState extends State<LoginPage> {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == true) {
-        // Stocker l'utilisateur connecté dans le singleton UserSession
+        // STOCKAGE LOCAL USER INFO
         UserSession.setUser(
           id: data['user']['id'],
           name: data['user']['name'],
           email: data['user']['email'],
+          type: data['user']['type_user_id'],
         );
 
+        // CONNEXION REUSSI
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/user');
+          if (data['user']['type_user_id'] == 3) {
+            Navigator.pushReplacementNamed(context, '/admin');
+          } else {
+            Navigator.pushReplacementNamed(context, '/user');
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
