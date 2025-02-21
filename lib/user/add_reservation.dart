@@ -4,18 +4,19 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_session_storage.dart';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE D'AJOUT DE RÉSERVATION
 class AddReservationPage extends StatefulWidget {
   const AddReservationPage({super.key});
-
-  // CRÉER L'ÉTAT
   @override
   _AddReservationPageState createState() => _AddReservationPageState();
 }
 
 class _AddReservationPageState extends State<AddReservationPage> {
+  
+  // VARIABLES
   int? _currentUserId;
   List<dynamic> _ponts = [];
   int? _selectedPontId;
@@ -32,7 +33,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
     _selectedStartTime = TimeOfDay.now();
   }
 
-  // CHARGER L'UTILISATEUR
+  // RECUPERATION DE L'UTILISATEUR
   void _loadCurrentUser() {
     setState(() {
       _currentUserId = UserSession.userId;
@@ -45,6 +46,8 @@ class _AddReservationPageState extends State<AddReservationPage> {
       // API REST URL
       final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
+
+      // VÉRIFIER LA RÉPONSE
       if (data['success']) {
         setState(() {
           _ponts = data['ponts'];
@@ -53,10 +56,10 @@ class _AddReservationPageState extends State<AddReservationPage> {
           }
         });
       } else {
-        _showMessage("Erreur lors du chargement des ponts.");
+        _showMessage("ERREUR LORS DU CHARGEMENT DES PONTS");
       }
     } catch (e) {
-      _showMessage("Erreur: ${e.toString()}");
+      _showMessage("ERREUR: ${e.toString()}");
     }
   }
 
@@ -75,7 +78,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
     }
   }
 
-  // CHOISIR L'HEURE DE DÉBUT
+  // CHOIX L'HEURE DE DÉBUT
   Future<void> _pickStartTime() async {
     final TimeOfDay? time = await showTimePicker(
       context: context,
@@ -114,6 +117,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
       _isLoading = true;
     });
 
+    // FORMATER LA DATE ET L'HEURE
     String dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
     final startDateTime = DateTime(
       _selectedDate.year,
@@ -127,6 +131,8 @@ class _AddReservationPageState extends State<AddReservationPage> {
     try {
       // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}user/addReservation.php');
+      
+      // ENVOYER LA REQUÊTE
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -139,19 +145,19 @@ class _AddReservationPageState extends State<AddReservationPage> {
       );
       final data = json.decode(response.body);
       if (data['success'] == true) {
-        _showMessage("Réservation ajoutée avec succès");
+        _showMessage("RESERVATION AJOUTÉE AVEC SUCCÈS");
       } else {
-        _showMessage("Erreur : ${data['message']}");
+        _showMessage("ERREUR : ${data['message']}");
       }
     } catch (e) {
-      _showMessage("Erreur: ${e.toString()}");
+      _showMessage("ERREUR: ${e.toString()}");
     }
     setState(() {
       _isLoading = false;
     });
   }
 
-  // CONSTRUIRE LE DROPDOWN DES PONTS
+  // CONSTRUIRE LA LISTE DÉROULANTE DES PONTS
   Widget _buildPontDropdown() {
     return DropdownButtonFormField<int>(
       decoration: InputDecoration(
@@ -173,7 +179,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
       isExpanded: true,
       value: _selectedPontId,
 
-      // ITEMS AVEC SÉLECTEUR MENU DEROULANT
+      // LORSQUE LE MENU EST OUVERT
       items: _ponts.map<DropdownMenuItem<int>>((pont) {
         bool isSelected = pont['pont_id'] == _selectedPontId;
         return DropdownMenuItem<int>(
@@ -218,7 +224,7 @@ class _AddReservationPageState extends State<AddReservationPage> {
         });
       },
 
-      // STYLE DU MENU DÉROULANT
+      // STYLES DU MENU DÉROULANT
       dropdownColor: backgroundLight,
       iconEnabledColor: textPrimary,
       borderRadius: BorderRadius.circular(16),
@@ -235,6 +241,8 @@ class _AddReservationPageState extends State<AddReservationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
           "AJOUTER UNE RÉSERVATION",
@@ -244,16 +252,17 @@ class _AddReservationPageState extends State<AddReservationPage> {
         centerTitle: true,
       ),
       backgroundColor: backgroundLight,
+
+      // CORPS DE LA PAGE
       body: Padding(
         padding: const EdgeInsets.only(top: 25, left: 12, right: 12),
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-          child: // Dans le widget build, remplacez la partie correspondante par :
-
+          child: 
           Column(
             children: [
-              // CHAMPS DU DROPDOWN ET DATE ALIGNÉS
+              // CHAMP DE SÉLECTION DU PONT & DATE
               Row(
                 children: [
                   Expanded(
@@ -290,9 +299,11 @@ class _AddReservationPageState extends State<AddReservationPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              // Autres champs (heure de début/fin et bouton)
+
               Row(
                 children: [
+                  
+                  // CHAMP DE SÉLECTION DE L'HEURE DE DÉBUT
                   Expanded(
                     child: GestureDetector(
                       onTap: _pickStartTime,
@@ -317,6 +328,8 @@ class _AddReservationPageState extends State<AddReservationPage> {
                     ),
                   ),
                   const SizedBox(width: 12),
+
+                  // CHAMP DE L'HEURE DE FIN
                   Expanded(
                     child: InputDecorator(
                       decoration: InputDecoration(
@@ -336,6 +349,8 @@ class _AddReservationPageState extends State<AddReservationPage> {
                 ],
               ),
               const SizedBox(height: 24),
+
+              // BOUTON DE SOUMISSION
               ElevatedButton(
                 onPressed: _submitReservation,
                 style: ElevatedButton.styleFrom(

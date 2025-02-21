@@ -6,7 +6,6 @@ import 'package:pontconnect/user/view_reservation.dart';
 import 'package:pontconnect/user/main_view.dart';
 import 'package:pontconnect/animation_ouverture.dart';
 import 'package:pontconnect/visitor/visitor_main_view.dart';
-
 import 'admin/admin_main_view.dart';
 
 // POINT D'ENTREE
@@ -23,9 +22,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      // THEME GLOBAL
       theme: ThemeData(
         fontFamily: 'DarumadropOne',
       ),
+
+      // ROUTES
       initialRoute: '/SplashScreen',
       routes: {
         '/login_screen': (context) => LoginPage(),

@@ -2,25 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pontconnect/user/user_reservation.dart';
 import 'package:pontconnect/user/user_session_storage.dart';
-
-
-// COULEURS
-import 'package:pontconnect/colors.dart';
-
 import '../user/get_values_capteurs.dart';
 import '../user/help.dart';
 import '../user/view_reservation.dart';
 
+
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
+
+// PAGE PRINCIPALE DU VISITEUR
 class VisitorMainView extends StatefulWidget {
   const VisitorMainView({super.key});
-
-  // CRÉER L'ÉTAT
   @override
   _UserPageState createState() => _UserPageState();
 }
 
 class _UserPageState extends State<VisitorMainView> {
 
+  // VARIABLES
   final String userName = UserSession.userName ?? "VISITEUR";
   int _currentIndex = 0;
 
@@ -96,6 +95,8 @@ class _UserPageState extends State<VisitorMainView> {
 
   // CONSTRUIRE LE CONTENU DU BODY
   Widget _getBodyContent() {
+
+    // PREMIERE PAGE (ACCUEIL)
     if (_currentIndex == 0) {
       return Column(
         children: [
@@ -122,6 +123,8 @@ class _UserPageState extends State<VisitorMainView> {
         ],
       );
     }
+
+    // TROISIEME PAGE (AIDE)
     else if (_currentIndex == 2) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -132,6 +135,7 @@ class _UserPageState extends State<VisitorMainView> {
       );
     }
 
+    // PAGES PAR DEFAUT
     else {
       return Center(
         child: Text(
@@ -158,6 +162,8 @@ class _UserPageState extends State<VisitorMainView> {
         color: primaryColor,
       ),
       elevation: 8,
+
+      // DECONNEXION & REDIRECTION
       onTap: (index) {
         if (index == 3) {
           // DECONNEXION

@@ -4,26 +4,26 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../user/user_session_storage.dart';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE D'AJOUT DE RESERVATION ADMIN
 class AdminAddReservation extends StatefulWidget {
   const AdminAddReservation({super.key});
-
   @override
   _AdminAddReservationState createState() => _AdminAddReservationState();
 }
 
 class _AdminAddReservationState extends State<AdminAddReservation> {
+  
+  // VARIABLES
   int? _currentUserId;
   List<dynamic> _ponts = [];
   int? _selectedPontId;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedStartTime = TimeOfDay.now();
   bool _isLoading = false;
-  // Valeur par défaut pour le statut admin
   String _selectedStatut = "maintenance";
-  // Liste des statuts autorisés
   final List<String> _statuts = ["en attente", "confirmé", "annulé", "maintenance"];
 
   @override
@@ -40,10 +40,15 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     });
   }
 
+  // RECUPERATION DES PONTS
   Future<void> _fetchPonts() async {
     try {
+
+      // API REST URL
       final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success']) {
         setState(() {
           _ponts = data['ponts'];
@@ -52,13 +57,14 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
           }
         });
       } else {
-        _showMessage("Erreur lors du chargement des ponts.");
+        _showMessage("ERREUR LORS DE LA RECUPERATION DES PONTS");
       }
     } catch (e) {
-      _showMessage("Erreur: ${e.toString()}");
+      _showMessage("ERREUR: ${e.toString()}");
     }
   }
 
+  // SELECTION DE LA DATE
   Future<void> _pickDate() async {
     final DateTime? date = await showDatePicker(
       context: context,
@@ -73,6 +79,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     }
   }
 
+  // SELECTION DE L'HEURE DE DEBUT
   Future<void> _pickStartTime() async {
     final TimeOfDay? time = await showTimePicker(
       context: context,
@@ -85,6 +92,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     }
   }
 
+  // CALCUL DE L'HEURE DE FIN
   String _computeEndTime() {
     final startDateTime = DateTime(
       _selectedDate.year,
@@ -97,10 +105,12 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     return DateFormat('HH:mm').format(endDateTime);
   }
 
+  // AFFICHAGE DE MESSAGE
   void _showMessage(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
+  // ENVOI DE LA RESERVATION
   Future<void> _submitReservation() async {
     if (_selectedPontId == null || _currentUserId == null) return;
 
@@ -119,7 +129,11 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     String startTimeStr = DateFormat('HH:mm').format(startDateTime);
 
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminAddReservation.php');
+      
+      // ENVOI DE LA REQUETE
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -131,20 +145,23 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
           "statut": _selectedStatut, // Envoi du statut choisi
         }),
       );
+
+      // VERIFICATION DE LA REPONSE
       final data = json.decode(response.body);
       if (data['success'] == true) {
-        _showMessage("Réservation ajoutée avec succès");
+        _showMessage("RESERVATION AJOUTEE AVEC SUCCES");
       } else {
-        _showMessage("Erreur : ${data['message']}");
+        _showMessage("ERREUR : ${data['message']}");
       }
     } catch (e) {
-      _showMessage("Erreur: ${e.toString()}");
+      _showMessage("ERREUR: ${e.toString()}");
     }
     setState(() {
       _isLoading = false;
     });
   }
 
+  // MENU DEROULANT POUR LES PONTS
   Widget _buildPontDropdown() {
     return DropdownButtonFormField<int>(
       decoration: InputDecoration(
@@ -161,6 +178,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
       ),
       isExpanded: true,
       value: _selectedPontId,
+
       // STYLE POUR LES ITEMS MENU DEROULANT
       items: _ponts.map<DropdownMenuItem<int>>((pont) {
         bool isSelected = pont['pont_id'] == _selectedPontId;
@@ -186,7 +204,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
         );
       }).toList(),
 
-      // MENU FERME STYLE
+      // QUAND UN ELEMENT EST SELECTIONNE & FERMER
       selectedItemBuilder: (BuildContext context) {
         return _ponts.map<Widget>((pont) {
           return Text(
@@ -205,6 +223,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
           _selectedPontId = val;
         });
       },
+
       // MENU DEROULANT STYLE
       dropdownColor: backgroundLight,
       iconEnabledColor: textPrimary,
@@ -218,6 +237,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
     );
   }
 
+  // MENU DEROULANT POUR LE STATUT
   Widget _buildStatutDropdown() {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
@@ -246,6 +266,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
         fontFamily: 'DarumadropOne',
       ),
 
+      // MENU DEROULANT ITEMS
       items: _statuts.map<DropdownMenuItem<String>>((status) {
         return DropdownMenuItem<String>(
           value: status,
@@ -268,6 +289,8 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
           "AJOUTER UNE RÉSERVATION",
@@ -281,6 +304,8 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
         centerTitle: true,
       ),
       backgroundColor: backgroundLight,
+
+      // CORPS DE LA PAGE
       body: Padding(
         padding: const EdgeInsets.only(top: 25, left: 12, right: 12),
         child: _isLoading
@@ -288,7 +313,8 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
             : SingleChildScrollView(
           child: Column(
             children: [
-              // PREMIÈRE LIGNE : Dropdown pour le statut et champ pour la date
+
+              // PREMIÈRE LIGNE MENU DEROULANT STATUT & DATE
               Row(
                 children: [
                   Expanded(
@@ -327,10 +353,12 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
                 ],
               ),
               const SizedBox(height: 16),
-              // DEUXIÈME LIGNE : Dropdown pour choisir un pont
+
+              // DEUXIÈME LIGNE MENU DEROULANT PONT
               _buildPontDropdown(),
               const SizedBox(height: 16),
-              // TROISIÈME LIGNE : Heure de début et d'affichage de l'heure de fin
+
+              // TROISIÈME LIGNE HEURE DE DEBUT & HEURE DE FIN
               Row(
                 children: [
                   Expanded(
@@ -377,6 +405,8 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
                 ],
               ),
               const SizedBox(height: 24),
+
+              // BOUTON AJOUTER RESERVATION
               ElevatedButton(
                 onPressed: _submitReservation,
                 style: ElevatedButton.styleFrom(

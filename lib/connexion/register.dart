@@ -3,17 +3,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE D'INSCRIPTION
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
-
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
+  // VARIABLES
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -21,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isLoading = false;
   bool _obscurePassword = true;
 
+  // INSCRIPTION
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -28,6 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       final response = await http.post(
+        // API REST URL
         Uri.parse('${ApiConstants.baseUrl}auth/register.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -39,21 +43,22 @@ class _RegisterPageState extends State<RegisterPage> {
 
       final data = jsonDecode(response.body);
 
+      // VERIFICATION DE LA REPONSE
       if (response.statusCode == 201 && data['success'] == true) {
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/login_screen');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Inscription réussie ! Connectez-vous')),
+            const SnackBar(content: Text('INSRIPTION REUSSIE ! CONNECTEZ-VOUS')),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'] ?? 'Erreur d\'inscription')),
+          SnackBar(content: Text(data['message'] ?? 'ERREUR D\'INSCRIPTION')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur de connexion au serveur')),
+        const SnackBar(content: Text('ERREUR DE CONNEXION AU SERVEUR')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -63,6 +68,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // CORPS DE LA PAGE
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -87,6 +94,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               padding: const EdgeInsets.all(24),
+
+              // FORMULAIRE D'INSCRIPTION
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -98,6 +107,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: primaryColor,
                     ),
                     const SizedBox(height: 30),
+
+                    // CHAMPS DE SAISIE NOM
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
@@ -122,6 +133,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+
+                    // CHAMPS DE SAISIE EMAIL
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -150,6 +163,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+
+                    // CHAMPS DE SAISIE MOT DE PASSE
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
@@ -185,6 +200,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 30),
+
+                    // BOUTON D'INSCRIPTION
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -208,6 +225,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
+
+                    // LIEN VERS LA PAGE DE CONNEXION
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/login_screen');

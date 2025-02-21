@@ -3,18 +3,20 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE DE RECHERCHE DE RESERVATIONS
 class ReservationsSchedulePage extends StatefulWidget {
   const ReservationsSchedulePage({Key? key}) : super(key: key);
-
-  // CREER ETAT
   @override
   _ReservationsSchedulePageState createState() => _ReservationsSchedulePageState();
 }
 
+// ETAT DE LA PAGE
 class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
+
+  // VARIABLES
   List<dynamic> _ponts = [];
   int? _selectedPontId;
   DateTime _selectedDate = DateTime.now();
@@ -34,6 +36,8 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
       // API REST URL
       final response = await http.get(Uri.parse('${ApiConstants.baseUrl}user/getPonts.php'));
       final data = json.decode(response.body);
+      
+      // VERIFIER LA REPONSE
       if (data['success']) {
         setState(() {
           _ponts = data['ponts'];
@@ -56,12 +60,16 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
 
   // RECHERCHER LES RÉSERVATIONS
   Future<void> _searchSchedule() async {
+
+    // VERIFIER LE PONT SELECTIONNE
     if (_selectedPontId == null) return;
     setState(() {
       _isLoading = true;
       _schedule = [];
     });
     final formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+
+    // RECUPERER LES RESERVATIONS
     try {
       // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}user/schedule.php?pont_id=$_selectedPontId&date=$formattedDate');
@@ -83,7 +91,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
     }
   }
 
-  // CHOISIR LA DATE
+  // CHOISIR UNE DATE
   Future<void> _pickDate() async {
     final DateTime? date = await showDatePicker(
       context: context,
@@ -118,13 +126,23 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
       separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final slot = _schedule[index];
-        final String status = slot['status'].toString().toLowerCase();
-        final bool isAvailable = status == 'disponible' || status == 'pont ouvert';
+        final String statusText = slot['status'].toString().toLowerCase();
+
+        // COULEURS SELON LE STATUS
+        Color chipColor;
+        if (statusText == 'maintenance') {
+          chipColor = accentColor2;
+        } else if (statusText == 'pont ouvert') {
+          chipColor = accentColor;
+        } else {
+          chipColor = secondaryColor;
+        }
+
+        // CONSTRUIRE LE WIDGET DE LA CARTE
         return Card(
           color: backgroundLight,
           surfaceTintColor: backgroundLight,
           shadowColor: Colors.grey.withOpacity(0.2),
-
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(16),
@@ -132,16 +150,18 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
             ),
           ),
           elevation: 2,
+
+          // CONTENU DE LA CARTE
           child: Container(
             decoration: BoxDecoration(
               color: backgroundLight,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(16),
                 bottomRight: Radius.circular(16),
               ),
               border: Border(
                 left: BorderSide(
-                  color: isAvailable ? accentColor : secondaryColor,
+                  color: chipColor,
                   width: 5,
                 ),
               ),
@@ -150,15 +170,17 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                   color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 2,
                   blurRadius: 5,
-                  offset: Offset(0, 3), // décalage de l'ombre
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             padding: const EdgeInsets.all(16),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // AFFICHER L'HEURE ET LE STATUT
+
+                // AFFICHAGE DE L'HEURE
                 Row(
                   children: [
                     Icon(Icons.access_time, color: textSecondary),
@@ -175,10 +197,11 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isAvailable ? accentColor : secondaryColor,
+                        color: chipColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
+                        // AFFICHAGE DU STATUS
                         slot['status'],
                         style: const TextStyle(
                           color: backgroundLight,
@@ -189,7 +212,8 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                // AFFICHER LES HORAIRES DE LA RÉSERVATION SI DISPONIBLE
+
+                // AFFICHAGE DE LA RESERVATION
                 slot['reservation'] != null
                     ? Row(
                   children: [
@@ -226,7 +250,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
     );
   }
 
-  // DEFINITION DE LA BORNE DES CHAMPS DE SAISIE
+  // STYLE DU BORDURE DE CHAMP
   OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
@@ -239,6 +263,8 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundLight,
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
           'RECHERCHE DE RÉSERVATIONS',
@@ -253,13 +279,16 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
         shadowColor: primaryColor.withOpacity(0.3),
         centerTitle: true,
       ),
+
+      // CORPS DE LA PAGE
       body: Padding(
         padding: const EdgeInsets.only(top: 25, left: 12, right: 12),
         child: Column(
           children: [
-            // CHAMPS DE FILTRE
+            // SELECTIONNER UN PONT + DATE + BOUTON DE RECHERCHE
             Row(
               children: [
+
                 // SELECTIONNER UN PONT
                 Expanded(
                   flex: 4,
@@ -277,7 +306,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                       fontFamily: 'DarumadropOne',
                     ),
 
-                    // STYLE AFFICHEUR
+                    // LISTE DES PONTS
                     selectedItemBuilder: (BuildContext context) {
                       return _ponts.map<Widget>((pont) {
                         return Text(
@@ -292,7 +321,6 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                       }).toList();
                     },
 
-                    // STYLE DEROULANT + SELECTEUR
                     items: _ponts.map<DropdownMenuItem<int>>((pont) {
                       bool isSelected = pont['pont_id'] == _selectedPontId;
                       return DropdownMenuItem<int>(
@@ -317,6 +345,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                         _selectedPontId = newValue;
                       });
                     },
+
                     decoration: InputDecoration(
                       labelText: "Pont",
                       labelStyle: TextStyle(color: textSecondary),
@@ -326,9 +355,9 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 12),
-                // CHOISIR LA DATE
+
+                // SELECTIONNER UNE DATE
                 Expanded(
                   flex: 3,
                   child: GestureDetector(
@@ -349,6 +378,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                   ),
                 ),
                 const SizedBox(width: 12),
+
                 // BOUTON DE RECHERCHE
                 Expanded(
                   flex: 1,
@@ -369,7 +399,8 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
               ],
             ),
             const SizedBox(height: 20),
-            // AFFICHER LA LISTE DES RÉSERVATIONS
+
+            // AFFICHAGE DE LA LISTE DES RESERVATIONS
             Expanded(
               child: _isLoading
                   ? Center(child: CircularProgressIndicator(color: primaryColor))

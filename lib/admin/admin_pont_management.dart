@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:pontconnect/colors.dart';
 
+
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
+
+// PAGE DE GESTION DES PONTS
 class AdminPontManagement extends StatefulWidget {
   const AdminPontManagement({super.key});
-
   @override
   _AdminPontManagementPageState createState() => _AdminPontManagementPageState();
 }
 
 class _AdminPontManagementPageState extends State<AdminPontManagement> {
+  // VARIABLES
   List<dynamic> _ponts = [];
   bool _isLoading = false;
 
@@ -23,35 +27,45 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
     _fetchPonts();
   }
 
+  // RECUPERATION DES PONTS
   Future<void> _fetchPonts() async {
     setState(() {
       _isLoading = true;
     });
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminGetPonts.php');
       final response = await http.get(url);
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         setState(() {
           _ponts = data['ponts'];
         });
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(data['message'] ?? "Erreur")));
+            .showSnackBar(SnackBar(content: Text(data['message'] ?? "ERREUR")));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Erreur: $e")));
+          .showSnackBar(SnackBar(content: Text("ERREUR: $e")));
     }
     setState(() {
       _isLoading = false;
     });
   }
 
+  // AJOUT D'UN PONT
   Future<void> _addPont() async {
     if (_nomController.text.trim().isEmpty || _adresseController.text.trim().isEmpty) return;
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminAddPont.php');
+      
+      // ENVOI DE LA REQUETE
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -61,6 +75,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
         }),
       );
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Pont ajouté avec succès")));
@@ -69,37 +85,45 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
         _fetchPonts();
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(data['message'] ?? "Erreur")));
+            .showSnackBar(SnackBar(content: Text(data['message'] ?? "ERREUR")));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Erreur: $e")));
+          .showSnackBar(SnackBar(content: Text("ERREUR: $e")));
     }
   }
 
+  // SUPPRESSION D'UN PONT
   Future<void> _deletePont(int pontId) async {
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminDeletePont.php');
+      
+      // ENVOI DE LA REQUETE
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"pont_id": pontId}),
       );
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Pont supprimé avec succès")));
         _fetchPonts();
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(data['message'] ?? "Erreur")));
+            .showSnackBar(SnackBar(content: Text(data['message'] ?? "ERREUR")));
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Erreur: $e")));
+          .showSnackBar(SnackBar(content: Text("ERREUR: $e")));
     }
   }
 
+  // CONSTRUCTION DES CARTES DE PONTS
   Widget _buildPontItem(dynamic pont) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
@@ -109,6 +133,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
         trailing: IconButton(
           icon: const Icon(Icons.delete, color: accentColor),
           onPressed: () {
+
+            // CONFIRMATION DE SUPPRESSION
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -135,12 +161,14 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
     );
   }
 
-  // Formulaire pour ajouter un nouveau pont
+  // FORMULAIRE D'AJOUT DE PONT
   Widget _buildAddPontForm() {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
         children: [
+
+          // NOM DU PONT
           TextField(
             controller: _nomController,
             decoration:  InputDecoration(
@@ -151,6 +179,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
             ),
           ),
           const SizedBox(height: 12),
+
+          // ADRESSE DU PONT
           TextField(
             controller: _adresseController,
             decoration:  InputDecoration(
@@ -161,6 +191,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
             ),
           ),
           const SizedBox(height: 12),
+
+          // BOUTON AJOUTER
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton(
@@ -193,6 +225,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
             "GESTION DES PONTS",
@@ -201,6 +235,8 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
+
+      // CORPS DE LA PAGE
       body: Column(
         children: [
           _buildAddPontForm(),

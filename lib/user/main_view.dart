@@ -7,19 +7,20 @@ import 'help.dart';
 import 'view_reservation.dart';
 import 'get_values_capteurs.dart';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE UTILISATEUR
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
-
-  // CRÉER L'ÉTAT
   @override
   _UserPageState createState() => _UserPageState();
 }
 
+// ETAT DE LA PAGE
 class _UserPageState extends State<UserPage> {
 
+  // RECUPERER LE NOM DE L'UTILISATEUR
   final String userName = UserSession.userName ?? "USER";
   int _currentIndex = 0;
 
@@ -95,9 +96,12 @@ class _UserPageState extends State<UserPage> {
 
   // CONSTRUIRE LE CONTENU DU BODY
   Widget _getBodyContent() {
+
+    // PREMIER ONGLET
     if (_currentIndex == 0) {
       return Column(
         children: [
+
           // SECTION HAUTE
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -107,6 +111,7 @@ class _UserPageState extends State<UserPage> {
               child: const CapteursCarouselPage(),
             ),
           ),
+
           const SizedBox(height: 16),
           // SECTION BASSE
           Expanded(
@@ -120,9 +125,13 @@ class _UserPageState extends State<UserPage> {
           ),
         ],
       );
-    } else if (_currentIndex == 1) {
+    } 
+
+    // DEUXIEME ONGLET    
+    else if (_currentIndex == 1) {
       return Column(
         children: [
+
           // SECTION HAUTE
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -133,6 +142,7 @@ class _UserPageState extends State<UserPage> {
             ),
           ),
           const SizedBox(height: 16),
+
           // SECTION BASSE
           Expanded(
             child: ClipRRect(
@@ -146,6 +156,8 @@ class _UserPageState extends State<UserPage> {
         ],
       );
     }
+
+    // TROISIEME ONGLET
     else if (_currentIndex == 2) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -156,6 +168,7 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
+    // AUTRES ONGLETS
     else {
       return Center(
         child: Text(
@@ -182,6 +195,8 @@ class _UserPageState extends State<UserPage> {
         color: primaryColor,
       ),
       elevation: 8,
+
+      // DECONNEXION BUTTON
       onTap: (index) {
         if (index == 3) {
           // DECONNEXION

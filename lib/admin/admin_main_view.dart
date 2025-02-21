@@ -9,21 +9,19 @@ import 'admin_pont_management.dart';
 import 'admin_reservation.dart';
 import 'admin_user_management.dart';
 
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
-
-
+// PAGE PRINCIPALE DE L'ADMINISTRATEUR
 class AdminMainView extends StatefulWidget {
   const AdminMainView({super.key});
-
-  // CRÉER L'ÉTAT
   @override
   _UserPageState createState() => _UserPageState();
 }
 
 class _UserPageState extends State<AdminMainView> {
 
+  // VARIABLES
   final String userName = UserSession.userName ?? "ADMIN";
   int _currentIndex = 0;
 
@@ -40,7 +38,6 @@ class _UserPageState extends State<AdminMainView> {
       bottomNavigationBar: _buildBottomNavBar(),
     );
   }
-
 
   // METHODE DECONNEXION
   void _logout() {
@@ -98,11 +95,14 @@ class _UserPageState extends State<AdminMainView> {
     );
   }
 
-  // CONSTRUIRE LE CONTENU DU BODY
+  // CONSTRUIRE LE CONTENU
   Widget _getBodyContent() {
+
+    // PAGES PRINCIPALES
     if (_currentIndex == 0) {
       return Column(
         children: [
+
           // SECTION HAUTE
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -112,6 +112,7 @@ class _UserPageState extends State<AdminMainView> {
               child: const CapteursCarouselPage(),
             ),
           ),
+
           const SizedBox(height: 16),
           // SECTION BASSE
           Expanded(
@@ -125,9 +126,13 @@ class _UserPageState extends State<AdminMainView> {
           ),
         ],
       );
-    } else if (_currentIndex == 1) {
+    } 
+    
+    // DEUXIEME PAGE RESERVATION
+    else if (_currentIndex == 1) {
       return Column(
         children: [
+
           // SECTION HAUTE
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -138,6 +143,7 @@ class _UserPageState extends State<AdminMainView> {
             ),
           ),
           const SizedBox(height: 16),
+
           // SECTION BASSE
           Expanded(
             child: ClipRRect(
@@ -151,6 +157,8 @@ class _UserPageState extends State<AdminMainView> {
         ],
       );
     }
+
+    // TROISIEME PAGE MANAGEMENT RESERVATION
     else if (_currentIndex == 2){
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -160,6 +168,8 @@ class _UserPageState extends State<AdminMainView> {
         ),
       );
     }
+
+    // QUATRIEME PAGE GESTION UTILISATEUR
     else if (_currentIndex == 3){
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -169,6 +179,8 @@ class _UserPageState extends State<AdminMainView> {
         ),
       );
     }
+
+    // CINQUIEME PAGE GESTION PONTS
     else if (_currentIndex == 4){
       return ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -178,6 +190,8 @@ class _UserPageState extends State<AdminMainView> {
         ),
       );
     }
+
+    // AUTRES PAGE
     else {
       return Center(
         child: Text(
@@ -204,6 +218,8 @@ class _UserPageState extends State<AdminMainView> {
         color: primaryColor,
       ),
       elevation: 8,
+
+      // DECONNEXION & CHANGEMENT D'ONGLET
       onTap: (index) {
         if (index == 5) {
           // DECONNEXION
@@ -214,6 +230,8 @@ class _UserPageState extends State<AdminMainView> {
           });
         }
       },
+
+      // ICONES & LABELS
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

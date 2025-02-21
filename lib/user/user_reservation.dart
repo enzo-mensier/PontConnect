@@ -4,18 +4,20 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'user_session_storage.dart';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE DE RESERVATIONS UTILISATEUR
 class UserReservationsPage extends StatefulWidget {
   const UserReservationsPage({super.key});
-
-  // CREATION D'ETAT
   @override
   _UserReservationsPageState createState() => _UserReservationsPageState();
 }
 
+// ETAT DE LA PAGE
 class _UserReservationsPageState extends State<UserReservationsPage> {
+  
+  // VARIABLES
   List<dynamic> _reservations = [];
   bool _isLoading = false;
 
@@ -37,6 +39,8 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
       final url = Uri.parse('${ApiConstants.baseUrl}user/getUserReservations.php?user_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         setState(() {
           _reservations = data['reservations'];
@@ -55,10 +59,11 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
     });
   }
 
-  // METTRE A JOUR LE STATUT
+  // MISE A JOUR DU STATUT DE LA RESERVATION
   Future<void> _updateStatus(int reservationId, String newStatut) async {
     if (UserSession.userId == null) return;
     try {
+
       // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}user/userUpdateReservationStatus.php');
       final response = await http.post(
@@ -109,6 +114,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
       statusColor = secondaryColor;
     }
 
+    // CONSTRUCTION DE LA CARTE
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       shape: RoundedRectangleBorder(
@@ -120,7 +126,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
       elevation: 2,
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundLight, // Changer la couleur de fond en noir
+          color: backgroundLight,
           border: Border(
             left: BorderSide(color: statusColor, width: 5),
 
@@ -143,7 +149,8 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ENTETE DE L'ITEM
+
+            // NOM DU PONT RESERVE
             Row(
               children: [
                 Expanded(
@@ -157,7 +164,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                   ),
                 ),
 
-                // MENU DEROULANT
+                // MENU DEROULANT DE STATUT
                 Container(
                   decoration: BoxDecoration(
                     color: statusColor,
@@ -167,6 +174,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                   child: DropdownButton<String>(
                     value: currentStatus == "confirmé" ? null : currentStatus,
 
+                    // MENU DEROULANT SUGGESTION
                     hint: Text(
                       "confirmé",
                       style: const TextStyle(fontSize: 14, color: backgroundLight,fontFamily: 'DarumadropOne'),
@@ -183,6 +191,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                       fontFamily: 'DarumadropOne',
                     ),
 
+                    // MENU DEROULANT ICON
                     icon: Icon(
                       Icons.arrow_drop_down,
                       color: backgroundLight,
@@ -191,6 +200,8 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                     underline: Container(),
                     isDense: true,
                     iconSize: 16,
+
+                    // MENU DEROULANT ITEMS
                     selectedItemBuilder: (BuildContext context) {
                       if (currentStatus == "confirmé") {
                         return <Widget>[
@@ -240,7 +251,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
             const SizedBox(height: 4),
             Padding(padding: const EdgeInsets.only(bottom: 5, top: 5)),
 
-            // INFORMATIONS DE DATE
+            // DATE DE RESERVATION
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -266,6 +277,8 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
           "MES RÉSERVATIONS",
@@ -278,6 +291,7 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
         centerTitle: true,
       ),
 
+      // CORPS DE LA PAGE
       body: Container(
         color: backgroundLight,
         child: _isLoading

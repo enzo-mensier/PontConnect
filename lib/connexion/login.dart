@@ -4,17 +4,19 @@ import 'package:http/http.dart' as http;
 import 'package:pontconnect/user/user_session_storage.dart';
 import 'dart:convert';
 
-// COULEURS
-import 'package:pontconnect/colors.dart';
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
 
+// PAGE DE CONNEXION
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  // VARIABLES
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -29,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
+        // API REST URL
         Uri.parse('${ApiConstants.baseUrl}auth/login.php'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -39,8 +42,9 @@ class _LoginPageState extends State<LoginPage> {
 
       final data = jsonDecode(response.body);
 
+      // VERIFICATION DE LA REPONSE
       if (response.statusCode == 200 && data['success'] == true) {
-        // STOCKAGE LOCAL USER INFO
+        // ENREGISTREMENT DE LA SESSION UTILISATEUR
         UserSession.setUser(
           id: data['user']['id'],
           name: data['user']['name'],
@@ -48,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           type: data['user']['type_user_id'],
         );
 
-        // CONNEXION REUSSI
+        // CONNEXION REUSSI & REDIRECTION
         if (mounted) {
           if (data['user']['type_user_id'] == 3) {
             Navigator.pushReplacementNamed(context, '/admin');
@@ -58,12 +62,12 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'] ?? 'Erreur de connexion')),
+          SnackBar(content: Text(data['message'] ?? 'ERRREUR DE CONNEXION')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur de connexion au serveur')),
+        const SnackBar(content: Text('ERRREUR DE CONNEXION AU SERVEUR')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -73,7 +77,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Nouveau fond en gradient violet/rose
+      
+      // CORPS DE LA PAGE
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -85,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-            // Conteneur épuré pour le formulaire
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.9),
@@ -99,6 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               padding: const EdgeInsets.all(24),
+
+              // FORMULAIRE DE CONNEXION
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -110,6 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                       color: primaryColor,
                     ),
                     const SizedBox(height: 30),
+
+                    // CHAMPS DE SAISIE EMAIL
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -138,6 +146,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+
+                    // CHAMPS DE SAISIE MOT DE PASSE
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
@@ -173,6 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     const SizedBox(height: 30),
+
+                    // BOUTON DE CONNEXION
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -197,6 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
 
+                    // LIENS VERS LES PAGES D'INSCRIPTION & VISITEUR
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

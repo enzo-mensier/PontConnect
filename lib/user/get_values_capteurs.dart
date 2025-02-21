@@ -1,26 +1,27 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:pontconnect/colors.dart';
+import 'package:pontconnect/constants.dart';
 
 
-// CAPTEURS CAROUSEL
+// PAGE CAROUSEL CAPTEURS
 class CapteursCarouselPage extends StatefulWidget {
   const CapteursCarouselPage({Key? key}) : super(key: key);
-
   @override
   _CapteursCarouselPageState createState() => _CapteursCarouselPageState();
 }
 
 class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
+  
+  // VARIABLES
   List<dynamic> _capteurs = [];
   Timer? _refreshTimer;
   final Duration _refreshInterval = const Duration(seconds: 10);
 
-  // INIT
   @override
   void initState() {
     super.initState();
@@ -30,12 +31,14 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     });
   }
 
-  // FETCH
+  // RECUPERATION DES CAPTEURS
   Future<void> _fetchCapteurs() async {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}user/getValuesCapteurs.php');
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(const Duration(seconds: 5));
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         setState(() {
           _capteurs = data['capteurs'];
@@ -45,21 +48,27 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
           SnackBar(content: Text(data['message'] ?? "ERREUR DE RECUPERATION")),
         );
       }
+    } on SocketException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("DONNE PAS AJOUR DEPUIS")),
+      );
+    } on TimeoutException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("DONNE PAS AJOUR DEPUIS")),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("ERREUR: ${e.toString()}")),
+        SnackBar(content: Text("Erreur: ${e.toString()}")),
       );
     }
   }
-
-  // DISPOSE
   @override
   void dispose() {
     _refreshTimer?.cancel();
     super.dispose();
   }
 
-  // SENSOR CARD
+  // CONSTRUCTION DES CARTES DE CAPTEURS
   Widget buildSensorCard({
     required String value,
     required IconData icon,
@@ -96,7 +105,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     );
   }
 
-  // BUILD SLIDE
+  // CONSTRUCTION DES SLIDES
   Widget _buildSlide(Map<String, dynamic> item) {
     bool showBoat = (item['niveau_eau'] is num && item['niveau_eau'] > 7);
     return Container(
@@ -106,7 +115,8 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // HEADER
+
+          // NOM DU PONT
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -131,7 +141,8 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
             ),
           ),
           const SizedBox(height: 16),
-          // TEMP & WATER
+
+          // TEMPERATURE & NIVEAU D'EAU
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
@@ -150,7 +161,8 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
             ),
           ),
           const SizedBox(height: 16),
-          // HUMIDITY & SVG ANIMATION
+
+          // HUMIDITE & ANIMATION
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
@@ -195,7 +207,7 @@ class _CapteursCarouselPageState extends State<CapteursCarouselPage> {
     );
   }
 
-  // MAIN BUILD
+  // CONSTRUCTION DE LA PAGE
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,13 +299,17 @@ class _AnimatedBridgeSVGState extends State<AnimatedBridgeSVG>
           );
         }
       },
+
+      // SVG
       child: widget.isBoat
+        // BATEAU
           ? SvgPicture.asset(
         'assets/images/boat.svg',
         width: 54,
         height: 54,
         color: accentColor,
       )
+        // VOITURE
           : SvgPicture.asset(
         'assets/images/car.svg',
         width: 54,

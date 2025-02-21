@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pontconnect/colors.dart';
+import 'package:pontconnect/constants.dart';
 
+// PAGE D'AIDE
 class HelpPage extends StatelessWidget {
   const HelpPage({Key? key}) : super(key: key);
 
-  // Widget pour les icônes SVG (ex : bateau et voiture)
+  // WIDGETS POUR LES ICONES SVG
   Widget _buildSvgIconInfo({
     required String svgAsset,
     required Color iconColor,
@@ -36,7 +37,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  // Widget pour les icônes classiques
+  // WIDGET POUR LES ICONES
   Widget _buildIconInfo({
     required IconData icon,
     required Color iconColor,
@@ -62,7 +63,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  // Widget pour construire une carte d'information moderne
+  // WIDGET POUR LES CARTES
   Widget _buildCard({
     required String title,
     required Widget content,
@@ -92,7 +93,7 @@ class HelpPage extends StatelessWidget {
     );
   }
 
-  // Header de section
+  // WIDGET POUR LES TITRES DE SECTION
   Widget _buildSectionHeader(String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 12),
@@ -111,6 +112,8 @@ class HelpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundLight,
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
@@ -124,11 +127,15 @@ class HelpPage extends StatelessWidget {
           ),
         ),
       ),
+
+      // CORPS DE LA PAGE
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            // SECTION : PRESENTATION
             _buildSectionHeader('Présentation'),
             const Text(
               'Découvrez une application moderne et épurée pour consulter les ponts et gérer vos réservations. '
@@ -137,6 +144,8 @@ class HelpPage extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 24),
+
+            // SECTION : FONCTIONNALITES
             _buildCard(
               title: 'Page d\'Accueil - Informations sur les Ponts',
               content: Column(
@@ -174,6 +183,8 @@ class HelpPage extends StatelessWidget {
                 ],
               ),
             ),
+
+            // SECTION : FONCTIONNALITES
             _buildCard(
               title: 'Page d\'Accueil - Disponibilités',
               content: const Text(
@@ -183,6 +194,8 @@ class HelpPage extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
             ),
+
+            // SECTION : FONCTIONNALITES
             _buildCard(
               title: 'Réservation',
               content: const Text(
@@ -194,6 +207,8 @@ class HelpPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
+
+            // SECTION : REMERCIEMENTS
             Center(
               child: Text(
                 'Merci d\'utiliser notre application !',

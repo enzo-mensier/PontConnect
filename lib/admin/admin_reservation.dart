@@ -3,19 +3,24 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../user/user_session_storage.dart';
-import 'package:pontconnect/colors.dart';
 
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
+
+// PAGE DE GESTION DES RESERVATIONS
 class AdminReservations extends StatefulWidget {
   const AdminReservations({super.key});
-
   @override
   _AdminReservationsState createState() => _AdminReservationsState();
 }
 
 class _AdminReservationsState extends State<AdminReservations> {
+  
+  // VARIABLES
   List<dynamic> _reservations = [];
   bool _isLoading = false;
-  // Liste des statuts autorisés pour l'admin
+
+  // STATUTS DE RESERVATION
   final List<String> _statuts = ["en attente", "confirmé", "annulé", "maintenance"];
 
   @override
@@ -24,16 +29,19 @@ class _AdminReservationsState extends State<AdminReservations> {
     _fetchReservations();
   }
 
+  // RECUPERATION DES RESERVATIONS
   Future<void> _fetchReservations() async {
     if (UserSession.userId == null) return;
     setState(() {
       _isLoading = true;
     });
     try {
-      final url =
-      Uri.parse('${ApiConstants.baseUrl}user/getUserReservations.php?user_id=${UserSession.userId}');
+      // API REST URL
+      final url = Uri.parse('${ApiConstants.baseUrl}user/getUserReservations.php?user_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         setState(() {
           _reservations = data['reservations'];
@@ -52,10 +60,14 @@ class _AdminReservationsState extends State<AdminReservations> {
     });
   }
 
+  // MISE A JOUR DU STATUT DE RESERVATION
   Future<void> _updateStatus(int reservationId, String newStatut) async {
     if (UserSession.userId == null) return;
     try {
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminUpdateReservationStatus.php');
+      
+      // ENVOI DE LA REQUETE
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -66,6 +78,8 @@ class _AdminReservationsState extends State<AdminReservations> {
         }),
       );
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("MISE À JOUR EFFECTUÉE")));
@@ -81,18 +95,22 @@ class _AdminReservationsState extends State<AdminReservations> {
     }
   }
 
+  // CONSTRUCTION DES CARTES DE RESERVATIONS
   Widget _buildReservationItem(dynamic reservation) {
+
+    // FORMATTAGE DES DATES
     final dateDebut = DateTime.parse(reservation['date_debut']);
     final dateFin = DateTime.parse(reservation['date_fin']);
     final formattedDateDebut = DateFormat('dd/MM/yyyy HH:mm').format(dateDebut);
     final formattedDateFin = DateFormat('dd/MM/yyyy HH:mm').format(dateFin);
 
-
+    // STATUT DE RESERVATION
     String currentStatus = reservation['statut'];
     if (!["en attente", "annulé", "confirmé", "maintenance"].contains(currentStatus)) {
       currentStatus = "en attente";
     }
 
+    // COULEUR DE STATUT
     final Color statusColor;
     if (currentStatus == "annulé") {
       statusColor = textSecondary;
@@ -104,6 +122,7 @@ class _AdminReservationsState extends State<AdminReservations> {
       statusColor = secondaryColor;
     }
 
+    // CARTE DE RESERVATION
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       shape: RoundedRectangleBorder(
@@ -136,7 +155,8 @@ class _AdminReservationsState extends State<AdminReservations> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER
+
+            // NOM DU PONT
             Row(
               children: [
                 Expanded(
@@ -150,7 +170,7 @@ class _AdminReservationsState extends State<AdminReservations> {
                   ),
                 ),
 
-                // MENU STATUS
+                // MENU DEROULANT DE STATUT
                 Container(
                   decoration: BoxDecoration(
                     color: statusColor,
@@ -190,7 +210,7 @@ class _AdminReservationsState extends State<AdminReservations> {
                       }).toList();
                     },
 
-                    // MENU DEROULANT
+                    // MENU DEROULANT ITEMS
                     items: _statuts.map((String status) {
                       return DropdownMenuItem<String>(
                         value: status,
@@ -212,7 +232,8 @@ class _AdminReservationsState extends State<AdminReservations> {
 
             const SizedBox(height: 4),
             Padding(padding: const EdgeInsets.only(bottom: 5, top: 5)),
-            // Détails de date et heure
+            
+            // DATES DE RESERVATION
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -229,6 +250,8 @@ class _AdminReservationsState extends State<AdminReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
           "MES RÉSERVATIONS",
@@ -237,6 +260,8 @@ class _AdminReservationsState extends State<AdminReservations> {
         backgroundColor: primaryColor,
         centerTitle: true,
       ),
+
+      // CORPS DE LA PAGE
       body: Container(
         color: backgroundLight,
         child: _isLoading

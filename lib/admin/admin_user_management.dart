@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:pontconnect/colors.dart';
 import '../user/user_session_storage.dart';
 
+
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
+
+// PAGE DE GESTION DES UTILISATEURS
 class AdminUserManagement extends StatefulWidget {
   const AdminUserManagement({super.key});
-
   @override
   _AdminUserManagementPageState createState() => _AdminUserManagementPageState();
 }
 
 class _AdminUserManagementPageState extends State<AdminUserManagement> {
+  
+  // VARIABLES
   List<dynamic> _users = [];
   bool _isLoading = false;
 
+  // TYPES D'UTILISATEURS
   final Map<int, String> userTypes = {1: "Habitan", 2: "Capitaine", 3: "Admin"};
 
   @override
@@ -24,26 +30,32 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
   }
 
   Future<void> _fetchUsers() async {
+    
+    // RECUPERATION DES UTILISATEURS
     if (UserSession.userId == null) return;
     setState(() {
       _isLoading = true;
     });
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminGetUsers.php?admin_id=${UserSession.userId}');
       final response = await http.get(url);
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         setState(() {
           _users = data['users'];
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'] ?? "Erreur")),
+          SnackBar(content: Text(data['message'] ?? "ERREUR")),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur: $e"))
+          SnackBar(content: Text("ERREUR: $e"))
       );
     }
     setState(() {
@@ -51,11 +63,13 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
     });
   }
 
+  // MISE A JOUR DU TYPE D'UTILISATEUR
   Future<void> _updateUserType(int targetUserId, int newTypeId) async {
     if (UserSession.userId == null) return;
     final TextEditingController _passwordController = TextEditingController();
     bool confirmed = false;
 
+    // DIALOGUE DE CONFIRMATION
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -74,7 +88,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Annuler
+              Navigator.pop(context);
             },
             child: const Text("Annuler"),
           ),
@@ -94,7 +108,11 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
     if (!confirmed) return;
 
     try {
+
+      // API REST URL
       final url = Uri.parse('${ApiConstants.baseUrl}admin/adminUpdateUserType.php');
+      
+      // REQUETE POST
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -106,6 +124,8 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
         }),
       );
       final data = json.decode(response.body);
+
+      // VERIFICATION DE LA REPONSE
       if (data['success'] == true) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Type d'utilisateur mis à jour")));
@@ -120,6 +140,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
     }
   }
 
+  // CONSTRUCTION DES CARTES D'UTILISATEURS
   Widget _buildUserItem(dynamic user) {
     int currentType = user['type_user_id'];
     return Card(
@@ -147,6 +168,7 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
                     fontFamily: 'DarumadropOne',
                   ),
 
+                  // MENU DEROULANT ITEMS
                   items: userTypes.entries.map((entry) {
                     return DropdownMenuItem<int>(
                       value: entry.key,
@@ -170,6 +192,8 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // BARRE DE NAVIGATION
       appBar: AppBar(
         title: const Text(
             "GESTION DES UTILISATEURS",
@@ -178,6 +202,8 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
+
+      // CORPS DE LA PAGE
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
