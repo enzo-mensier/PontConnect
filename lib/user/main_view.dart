@@ -53,6 +53,7 @@ class _UserPageState extends State<UserPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                UserSession.clear();
                 Navigator.of(context).pushNamedAndRemoveUntil('/login_screen', (route) => false);
               },
               child: const Text('Déconnecter'),
