@@ -162,13 +162,24 @@ class _AdminReservationsState extends State<AdminReservations> {
                     value: currentStatus,
                     underline: Container(),
                     isDense: true,
+
+                    // MENU DEROULANT STYLE
+                    dropdownColor: backgroundLight,
+                    iconEnabledColor: textPrimary,
+                    borderRadius: BorderRadius.circular(16) ,
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'DarumadropOne',
+                    ),
+
                     icon: Icon(
                       Icons.arrow_drop_down,
                       color: backgroundLight,
                       size: 25,
                     ),
                     iconSize: 16,
-                    style: const TextStyle(fontSize: 14, color: backgroundLight, fontFamily: 'DarumadropOne'),
 
                     selectedItemBuilder: (BuildContext context) {
                       return _statuts.map((String status) {

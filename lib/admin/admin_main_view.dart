@@ -72,7 +72,7 @@ class _UserPageState extends State<AdminMainView> {
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: backgroundLight,
+      backgroundColor: primaryColor,
       centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -80,7 +80,7 @@ class _UserPageState extends State<AdminMainView> {
           SvgPicture.asset(
             "assets/images/logo.svg",
             height: 55,
-            color: primaryColor,
+            color: backgroundLight,
           ),
           const SizedBox(width: 8),
           Text(
@@ -88,7 +88,7 @@ class _UserPageState extends State<AdminMainView> {
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
-              color: primaryColor,
+              color: backgroundLight,
             ),
           ),
         ],
@@ -190,10 +190,18 @@ class _UserPageState extends State<AdminMainView> {
   // CONSTRUIRE LA BOTTOM NAVIGATION BAR
   Widget _buildBottomNavBar() {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       currentIndex: _currentIndex,
-      backgroundColor: backgroundLight,
-      selectedItemColor: primaryColor,
-      unselectedItemColor: textSecondary,
+      backgroundColor: primaryColor,
+      selectedItemColor: accentColor,
+      unselectedItemColor: backgroundLight,
+      selectedLabelStyle: const TextStyle(
+        color: accentColor,
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: const TextStyle(
+        color: primaryColor,
+      ),
       elevation: 8,
       onTap: (index) {
         if (index == 5) {

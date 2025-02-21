@@ -135,6 +135,18 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
                 const Text("Type : "),
                 DropdownButton<int>(
                   value: currentType,
+
+                  // MENU DEROULANT STYLE
+                  dropdownColor: backgroundLight,
+                  iconEnabledColor: textPrimary,
+                  borderRadius: BorderRadius.circular(16) ,
+                  style: TextStyle(
+                    color: textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'DarumadropOne',
+                  ),
+
                   items: userTypes.entries.map((entry) {
                     return DropdownMenuItem<int>(
                       value: entry.key,

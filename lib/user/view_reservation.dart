@@ -267,6 +267,18 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                     isExpanded: true,
                     value: _selectedPontId,
                     hint: Text("Pont", style: TextStyle(color: textSecondary)),
+
+                    // MENU DEROULANT STYLE
+                    dropdownColor: backgroundLight,
+                    iconEnabledColor: textPrimary,
+                    borderRadius: BorderRadius.circular(16) ,
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'DarumadropOne',
+                    ),
+
                     items: _ponts.map<DropdownMenuItem<int>>((pont) {
                       return DropdownMenuItem<int>(
                         value: pont['pont_id'],

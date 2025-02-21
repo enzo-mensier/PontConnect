@@ -194,6 +194,18 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
       ),
       isExpanded: true,
       value: _selectedStatut,
+
+      // MENU DEROULANT STYLE
+      dropdownColor: backgroundLight,
+      iconEnabledColor: textPrimary,
+      borderRadius: BorderRadius.circular(16) ,
+      style: TextStyle(
+        color: textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'DarumadropOne',
+      ),
+      
       items: _statuts.map<DropdownMenuItem<String>>((status) {
         return DropdownMenuItem<String>(
           value: status,

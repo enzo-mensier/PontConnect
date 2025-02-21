@@ -171,6 +171,18 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                       "confirmé",
                       style: const TextStyle(fontSize: 14, color: backgroundLight,fontFamily: 'DarumadropOne'),
                     ),
+
+                    // MENU DEROULANT STYLE
+                    dropdownColor: backgroundLight,
+                    iconEnabledColor: textPrimary,
+                    borderRadius: BorderRadius.circular(16) ,
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'DarumadropOne',
+                    ),
+
                     icon: Icon(
                       Icons.arrow_drop_down,
                       color: backgroundLight,
@@ -179,7 +191,6 @@ class _UserReservationsPageState extends State<UserReservationsPage> {
                     underline: Container(),
                     isDense: true,
                     iconSize: 16,
-                    style: const TextStyle(fontSize: 14, color: textPrimary,fontFamily: 'DarumadropOne'),
                     selectedItemBuilder: (BuildContext context) {
                       if (currentStatus == "confirmé") {
                         return <Widget>[
