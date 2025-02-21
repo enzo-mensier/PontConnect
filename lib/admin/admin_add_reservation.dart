@@ -161,20 +161,60 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
       ),
       isExpanded: true,
       value: _selectedPontId,
+      // STYLE POUR LES ITEMS MENU DEROULANT
       items: _ponts.map<DropdownMenuItem<int>>((pont) {
+        bool isSelected = pont['pont_id'] == _selectedPontId;
         return DropdownMenuItem<int>(
           value: pont['pont_id'],
-          child: Text(
-            pont['nom'],
-            style: const TextStyle(fontSize: 16, color: textPrimary),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: isSelected
+                ? BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
+            )
+                : null,
+            child: Text(
+              pont['nom'],
+              style: TextStyle(
+                fontSize: 16,
+                color: textPrimary,
+                fontFamily: 'DarumadropOne',
+              ),
+            ),
           ),
         );
       }).toList(),
+
+      // MENU FERME STYLE
+      selectedItemBuilder: (BuildContext context) {
+        return _ponts.map<Widget>((pont) {
+          return Text(
+            pont['nom'],
+            style: TextStyle(
+              fontSize: 16,
+              color: textPrimary,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'DarumadropOne',
+            ),
+          );
+        }).toList();
+      },
       onChanged: (val) {
         setState(() {
           _selectedPontId = val;
         });
       },
+      // MENU DEROULANT STYLE
+      dropdownColor: backgroundLight,
+      iconEnabledColor: textPrimary,
+      borderRadius: BorderRadius.circular(16),
+      style: TextStyle(
+        color: textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'DarumadropOne',
+      ),
     );
   }
 
@@ -205,7 +245,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
         fontWeight: FontWeight.w500,
         fontFamily: 'DarumadropOne',
       ),
-      
+
       items: _statuts.map<DropdownMenuItem<String>>((status) {
         return DropdownMenuItem<String>(
           value: status,
@@ -231,7 +271,11 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
       appBar: AppBar(
         title: const Text(
           "AJOUTER UNE RÉSERVATION",
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20, color: backgroundLight),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 20,
+            color: backgroundLight,
+          ),
         ),
         backgroundColor: primaryColor,
         centerTitle: true,
@@ -244,14 +288,16 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
             : SingleChildScrollView(
           child: Column(
             children: [
-              // PREMIÈRE LIGNE: Dropdown Pont et Date
+              // PREMIÈRE LIGNE : Dropdown pour le statut et champ pour la date
               Row(
                 children: [
                   Expanded(
-                    child: _buildPontDropdown(),
+                    flex: 4,
+                    child: _buildStatutDropdown(),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
+                    flex: 3,
                     child: GestureDetector(
                       onTap: _pickDate,
                       child: InputDecorator(
@@ -281,7 +327,10 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
                 ],
               ),
               const SizedBox(height: 16),
-              // DEUXIÈME LIGNE: Heure de début et d'affichage de l'heure de fin
+              // DEUXIÈME LIGNE : Dropdown pour choisir un pont
+              _buildPontDropdown(),
+              const SizedBox(height: 16),
+              // TROISIÈME LIGNE : Heure de début et d'affichage de l'heure de fin
               Row(
                 children: [
                   Expanded(
@@ -304,6 +353,7 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
                           "${_selectedStartTime.hour.toString().padLeft(2, '0')}:${_selectedStartTime.minute.toString().padLeft(2, '0')}",
                           style: const TextStyle(fontSize: 16, color: textPrimary),
                         ),
+
                       ),
                     ),
                   ),
@@ -326,9 +376,6 @@ class _AdminAddReservationState extends State<AdminAddReservation> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              // TROISIÈME LIGNE: Dropdown pour le statut
-              _buildStatutDropdown(),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submitReservation,

@@ -262,16 +262,14 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
               children: [
                 // SELECTIONNER UN PONT
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: DropdownButtonFormField<int>(
                     isExpanded: true,
                     value: _selectedPontId,
                     hint: Text("Pont", style: TextStyle(color: textSecondary)),
-
-                    // MENU DEROULANT STYLE
                     dropdownColor: backgroundLight,
                     iconEnabledColor: textPrimary,
-                    borderRadius: BorderRadius.circular(16) ,
+                    borderRadius: BorderRadius.circular(16),
                     style: TextStyle(
                       color: textPrimary,
                       fontSize: 16,
@@ -279,10 +277,39 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                       fontFamily: 'DarumadropOne',
                     ),
 
+                    // STYLE AFFICHEUR
+                    selectedItemBuilder: (BuildContext context) {
+                      return _ponts.map<Widget>((pont) {
+                        return Text(
+                          pont['nom'],
+                          style: TextStyle(
+                            color: textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'DarumadropOne',
+                          ),
+                        );
+                      }).toList();
+                    },
+
+                    // STYLE DEROULANT + SELECTEUR
                     items: _ponts.map<DropdownMenuItem<int>>((pont) {
+                      bool isSelected = pont['pont_id'] == _selectedPontId;
                       return DropdownMenuItem<int>(
                         value: pont['pont_id'],
-                        child: Text(pont['nom'], style: TextStyle(color: textPrimary)),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: isSelected
+                              ? BoxDecoration(
+                            color: accentColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(16),
+                          )
+                              : null,
+                          child: Text(
+                            pont['nom'],
+                            style: TextStyle(color: textPrimary),
+                          ),
+                        ),
                       );
                     }).toList(),
                     onChanged: (newValue) {
@@ -299,6 +326,7 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(width: 12),
                 // CHOISIR LA DATE
                 Expanded(

@@ -156,7 +156,11 @@ class _AddReservationPageState extends State<AddReservationPage> {
     return DropdownButtonFormField<int>(
       decoration: InputDecoration(
         labelText: "Choisir un pont",
-        labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: textSecondary),
+        labelStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: textSecondary,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -168,20 +172,62 @@ class _AddReservationPageState extends State<AddReservationPage> {
       ),
       isExpanded: true,
       value: _selectedPontId,
+
+      // ITEMS AVEC SÉLECTEUR MENU DEROULANT
       items: _ponts.map<DropdownMenuItem<int>>((pont) {
+        bool isSelected = pont['pont_id'] == _selectedPontId;
         return DropdownMenuItem<int>(
           value: pont['pont_id'],
-          child: Text(
-            pont['nom'],
-            style: const TextStyle(fontSize: 16, color: textPrimary),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: isSelected
+                ? BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
+            )
+                : null,
+            child: Text(
+              pont['nom'],
+              style: TextStyle(
+                fontSize: 16,
+                color: textPrimary,
+                fontFamily: 'DarumadropOne',
+              ),
+            ),
           ),
         );
       }).toList(),
+
+      // LORSQUE LE MENU EST FERMÉ
+      selectedItemBuilder: (BuildContext context) {
+        return _ponts.map<Widget>((pont) {
+          return Text(
+            pont['nom'],
+            style: TextStyle(
+              fontSize: 16,
+              color: textPrimary,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'DarumadropOne',
+            ),
+          );
+        }).toList();
+      },
       onChanged: (val) {
         setState(() {
           _selectedPontId = val;
         });
       },
+
+      // STYLE DU MENU DÉROULANT
+      dropdownColor: backgroundLight,
+      iconEnabledColor: textPrimary,
+      borderRadius: BorderRadius.circular(16),
+      style: TextStyle(
+        color: textPrimary,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'DarumadropOne',
+      ),
     );
   }
 
