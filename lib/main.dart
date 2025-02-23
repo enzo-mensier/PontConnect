@@ -8,6 +8,9 @@ import 'package:pontconnect/animation_ouverture.dart';
 import 'package:pontconnect/visitor/visitor_main_view.dart';
 import 'admin/admin_main_view.dart';
 
+// CENTRALISATION COULEURS & API
+import 'package:pontconnect/constants.dart';
+
 // POINT D'ENTREE
 void main() {
   // LANCEMENT DE L'APPLICATION
@@ -26,6 +29,13 @@ class MyApp extends StatelessWidget {
       // THEME GLOBAL
       theme: ThemeData(
         fontFamily: 'DarumadropOne',
+
+        // STYLE DES TEXTES SELECTIONNES
+        textSelectionTheme: TextSelectionThemeData(
+        cursorColor: primaryColor,
+        selectionColor: primaryColor.withOpacity(0.5),
+        selectionHandleColor: primaryColor,
+      ),
       ),
 
       // ROUTES
