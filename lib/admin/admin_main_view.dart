@@ -43,24 +43,44 @@ class _UserPageState extends State<AdminMainView> {
   void _logout() {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Déconnexion'),
-          content: const Text('Voulez-vous vraiment vous déconnecter ?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Annuler'),
+      builder: (BuildContext context) {
+        return Theme(
+
+          // THEME DE LA BOITE DE DIALOGUE
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: primaryColor,
+              onPrimary: backgroundLight,
+              onSurface: textPrimary,
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                UserSession.clear();
-                Navigator.of(context).pushNamedAndRemoveUntil('/login_screen', (route) => false);
-              },
-              child: const Text('Déconnecter'),
+            dialogBackgroundColor: backgroundLight,
+            textTheme: ThemeData.light().textTheme.apply(
+              fontFamily: 'DarumadropOne',
             ),
-          ],
+          ),
+
+          // BOITE DE DIALOGUE
+          child: AlertDialog(
+            title: const Text('Déconnexion'),
+            content: const Text('Voulez-vous vraiment vous déconnecter ?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Annuler'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  UserSession.clear();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login_screen',
+                        (route) => false,
+                  );
+                },
+                child: const Text('Déconnecter'),
+              ),
+            ],
+          ),
         );
       },
     );

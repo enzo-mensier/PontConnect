@@ -94,24 +94,41 @@ class _AdminReservationsState extends State<AdminPendingReservations> {
   void _confirmStatusChange(int reservationId, String currentStatus, String newStatus) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Confirmer la modification"),
-        content: Text("Voulez-vous changer le statut de '$currentStatus' à '$newStatus' ?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Annuler"),
+      builder: (_) => Theme(
+
+        // THEME DE LA BOITE DE DIALOGUE
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: primaryColor,
+            onPrimary: backgroundLight,
+            onSurface: textPrimary,
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _updateStatus(reservationId, newStatus);
-            },
-            child: const Text("Confirmer"),
+          dialogBackgroundColor: backgroundLight,
+          textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'DarumadropOne',
           ),
-        ],
+        ),
+
+        // BOITE DE DIALOGUE
+        child: AlertDialog(
+          title: const Text("Confirmer la modification"),
+          content: Text("Voulez-vous changer le statut de '$currentStatus' à '$newStatus' ?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Annuler"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _updateStatus(reservationId, newStatus);
+              },
+              child: const Text("Confirmer"),
+            ),
+          ],
+        ),
       ),
     );
   }

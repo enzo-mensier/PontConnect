@@ -137,22 +137,39 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
             // CONFIRMATION DE SUPPRESSION
             showDialog(
               context: context,
-              builder: (_) => AlertDialog(
-                title: const Text("Confirmer la suppression"),
-                content: const Text("Voulez-vous supprimer ce pont ?"),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Annuler"),
+              builder: (_) => Theme(
+
+                // THEME DE LA BOITE DE DIALOGUE
+                data: ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: primaryColor,
+                    onPrimary: backgroundLight,
+                    onSurface: textPrimary,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _deletePont(pont['pont_id']);
-                    },
-                    child: const Text("Supprimer", style: TextStyle(color: accentColor)),
+                  dialogBackgroundColor: backgroundLight,
+                  textTheme: ThemeData.light().textTheme.apply(
+                    fontFamily: 'DarumadropOne',
                   ),
-                ],
+                ),
+
+                // BOITE DE DIALOGUE
+                child: AlertDialog(
+                  title: const Text("Confirmer la suppression"),
+                  content: const Text("Voulez-vous supprimer ce pont ?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Annuler"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _deletePont(pont['pont_id']);
+                      },
+                      child: const Text("Supprimer"),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -171,10 +188,26 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
           // NOM DU PONT
           TextField(
             controller: _nomController,
+            cursorColor: primaryColor,
             decoration:  InputDecoration(
               labelText: "Nom du pont",
+
+              labelStyle: TextStyle(
+                fontSize: 16,
+                color: textPrimary,
+                fontFamily: 'DarumadropOne',
+              ),
+              floatingLabelStyle: TextStyle(
+                color: primaryColor,
+                fontFamily: 'DarumadropOne',
+              ),
+
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: primaryColor, width: 2),
               ),
             ),
           ),
@@ -183,10 +216,26 @@ class _AdminPontManagementPageState extends State<AdminPontManagement> {
           // ADRESSE DU PONT
           TextField(
             controller: _adresseController,
+            cursorColor: primaryColor,
             decoration:  InputDecoration(
               labelText: "Adresse du pont",
+
+              labelStyle: TextStyle(
+                fontSize: 16,
+                color: textPrimary,
+                fontFamily: 'DarumadropOne',
+              ),
+              floatingLabelStyle: TextStyle(
+                color: primaryColor,
+                fontFamily: 'DarumadropOne',
+              ),
+
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: primaryColor, width: 2),
               ),
             ),
           ),

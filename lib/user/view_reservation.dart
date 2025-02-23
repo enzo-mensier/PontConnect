@@ -98,6 +98,24 @@ class _ReservationsSchedulePageState extends State<ReservationsSchedulePage> {
       initialDate: _selectedDate,
       firstDate: DateTime(2025),
       lastDate: DateTime(2030),
+
+      // PERSONNALISATION DU THEME
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: primaryColor,
+              onPrimary: backgroundLight,
+              onSurface: textPrimary,
+            ),
+            dialogBackgroundColor: backgroundLight,
+            textTheme: ThemeData.light().textTheme.apply(
+              fontFamily: 'DarumadropOne',
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (date != null) {
       setState(() {

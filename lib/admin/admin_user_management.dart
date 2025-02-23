@@ -72,36 +72,53 @@ class _AdminUserManagementPageState extends State<AdminUserManagement> {
     // DIALOGUE DE CONFIRMATION
     await showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Confirmer la modification"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Veuillez saisir votre mot de passe admin pour confirmer :"),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Mot de passe"),
+      builder: (_) => Theme(
+
+        // THEME DE LA BOITE DE DIALOGUE
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: primaryColor,
+            onPrimary: backgroundLight,
+            onSurface: textPrimary,
+          ),
+          dialogBackgroundColor: backgroundLight,
+          textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'DarumadropOne',
+          ),
+        ),
+
+        // BOITE DE DIALOGUE
+        child: AlertDialog(
+          title: const Text("Confirmer la modification"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Veuillez saisir votre mot de passe admin pour confirmer :"),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Mot de passe"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Annuler"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_passwordController.text.trim().isNotEmpty) {
+                  confirmed = true;
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text("Confirmer"),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Annuler"),
-          ),
-          TextButton(
-            onPressed: () {
-              if (_passwordController.text.trim().isNotEmpty) {
-                confirmed = true;
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Confirmer"),
-          ),
-        ],
       ),
     );
 

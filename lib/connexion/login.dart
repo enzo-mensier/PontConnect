@@ -120,11 +120,20 @@ class _LoginPageState extends State<LoginPage> {
                     // CHAMPS DE SAISIE EMAIL
                     TextFormField(
                       controller: _emailController,
+                      cursorColor: primaryColor,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: const Icon(Icons.email, color: primaryColor),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
+
+                        labelStyle: TextStyle(
+                          fontSize: 16,
+                          color: textPrimary,
+                          fontFamily: 'DarumadropOne',
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: primaryColor,
+                          fontFamily: 'DarumadropOne',
+                        ),
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: primaryColor),
@@ -133,6 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.grey.shade300),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: primaryColor, width: 2),
+                        ),
+
+                        prefixIcon: const Icon(Icons.email, color: primaryColor),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -151,11 +168,19 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
+                      cursorColor: primaryColor,
                       decoration: InputDecoration(
                         labelText: 'Mot de passe',
-                        prefixIcon: const Icon(Icons.lock, color: primaryColor),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
+                        labelStyle: TextStyle(
+                          fontSize: 16,
+                          color: textPrimary,
+                          fontFamily: 'DarumadropOne',
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: primaryColor,
+                          fontFamily: 'DarumadropOne',
+                        ),
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: primaryColor),
@@ -164,6 +189,15 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.grey.shade300),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: primaryColor, width: 2),
+                        ),
+
+                        prefixIcon: const Icon(Icons.lock, color: primaryColor),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,

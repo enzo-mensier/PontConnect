@@ -70,7 +70,26 @@ class _AddReservationPageState extends State<AddReservationPage> {
       initialDate: _selectedDate,
       firstDate: DateTime(2025),
       lastDate: DateTime(2030),
+
+      // PERSONNALISATION DU THEME
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: primaryColor,
+              onPrimary: backgroundLight,
+              onSurface: textPrimary,
+            ),
+            dialogBackgroundColor: backgroundLight,
+            textTheme: ThemeData.light().textTheme.apply(
+              fontFamily: 'DarumadropOne',
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (date != null) {
       setState(() {
         _selectedDate = date;
@@ -83,6 +102,24 @@ class _AddReservationPageState extends State<AddReservationPage> {
     final TimeOfDay? time = await showTimePicker(
       context: context,
       initialTime: _selectedStartTime,
+
+      // PERSONNALISATION DU THEME
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: primaryColor,
+              onPrimary: backgroundLight,
+              onSurface: textPrimary,
+            ),
+            dialogBackgroundColor: backgroundLight,
+            textTheme: ThemeData.light().textTheme.apply(
+              fontFamily: 'DarumadropOne',
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (time != null) {
       setState(() {
